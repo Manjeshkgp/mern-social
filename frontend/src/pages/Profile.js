@@ -38,7 +38,7 @@ const Profile = () => {
 
   return (/*src={`http://localhost:4000/${image}`}*/
     <>
-      <div className="bg-red-200 h-80 mt-12 grid overflow-hidden">
+      <div className="bg-red-200 h-[18rem] mt-12 grid overflow-hidden">
   <div className="grid grid-cols-6 gap-2 h-72">
     <div className="ml-2 col-span-2 flex justify-center items-center h-28">
       <img src="https://dummyimage.com/721x401" alt="profile" className="object-cover rounded-full w-20 h-20" />
@@ -66,7 +66,7 @@ const Profile = () => {
   </div>
   <div className="h-8">
     <div className="flex justify-evenly fixed -mt-[21rem] bg-green-200 py-[0.75rem] w-[100vw] z-10"><button className="sm:hidden">Back</button><p>@manjeshkrsharma</p><button className="sm:hidden">Bell</button><button className="sm:hidden">:</button></div>
-    <div className="flex justify-evenly items-center"><button>Follow</button><button>Message</button></div>
+    <div className="flex justify-evenly items-center -translate-y-8"><button>Follow</button><button>Message</button></div>
   </div>
 </div>
 <div className="flex justify-around items-center flex-col flex-wrap my-[2vh]">
