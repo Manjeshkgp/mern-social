@@ -3,12 +3,9 @@ import Cookies from "js-cookie";
 import UserPosts from "../components/UserPosts";
 
 const Profile = () => {
-  const [height, setHeight] = useState("");
+  const [height, setHeight] = useState(0);
   const elementRef = useRef(null);
-
-  useEffect(() => {
-    setHeight(elementRef.current.clientHeight / 16);
-  }, []);
+  const tabSize = window.matchMedia("(min-width: 767px)").matches;
   const [image, setImage] = useState("");
   const identification = Cookies.get("identification");
   const token = Cookies.get("token");
@@ -21,253 +18,128 @@ const Profile = () => {
     });
     const imageurl = await res.json();
     setImage(imageurl.image);
-    console.log(imageurl);
   };
   useEffect(() => {
-    // fetchProfile()
+    fetchProfile();
+    setHeight(elementRef.current.clientHeight / 16);
   }, []);
+  console.log(tabSize);
+  console.log(height);
+  const profileImage = `http://localhost:4000/${image}`;
   // const base64String = image===[]?"":btoa(String.fromCharCode(...new Uint8Array(image)));
   // <img loading='lazy' src={`data:image/png;base64,${base64String}`} alt=""/>
   // everythin was fine just middleware loading causing some problem, see the browser console
-
   return (
-    /*src={`http://localhost:4000/${image}`}*/
-    <>
-      <div
-        style={{ height: `${height + 8.875}rem` }}
-        className={`bg-red-200 mt-12 grid overflow-hidden`}
-      >
+    <div className="md:flex md:justify-center">
+      <div className="md:mx-5 md:max-w-[935px]">
         <div
-          style={{ height: `${height + 8.875}rem` }}
-          className={`grid grid-cols-6`}
+          style={
+            tabSize
+              ? { height: `${height + 8.875}rem` }
+              : { height: `${height + 8.875}rem` }
+          }
+          className={`bg-red-200 mt-12 grid overflow-hidden`}
         >
-          <div className="ml-2 col-span-2 flex justify-center items-center h-20 mt-2 mx-2">
-            <img
-              src="https://dummyimage.com/721x401"
-              alt="profile"
-              className="object-cover rounded-full w-20 h-20"
-            />
-          </div>
-          <div className="flex items-center justify-evenly col-span-4 h-20 mt-2 mx-2">
-            <div>
-              <p className="font-[650]">569</p>
-              <p className="font-medium">Posts</p>
-            </div>
-            <div>
-              <p className="font-[650]">71.2M</p>
-              <p className="font-medium">Followers</p>
-            </div>
-            <div>
-              <p className="font-[650]">2K</p>
-              <p className="font-medium">Following</p>
-            </div>
-          </div>
           <div
-            ref={elementRef}
-            className="heightcheck sm:mt-2 flex flex-col justify-start col-span-6 mb-20"
+            style={
+              tabSize
+                ? { height: `${height + 8.875}rem` }
+                : { height: `${height + 8.875}rem` }
+            }
+            className={`grid grid-cols-6 md:content-center`}
           >
-            <p className="text-lg font-bold ml-2 sm:ml-5">
-              Manjesh Kumar Sharma
-            </p>
-            <p className="ml-2 sm:ml-5 text-sm">Lorem ipsum dolor, sit amet consectetur adipisicing elit. Sit adipisci inventore amet dolores tenetur fuga magni, officiis quaerat quia quasi fugiat quo animi illo reiciendis mollitia qui eveniet enim veritatis exercitationem? Dolorum tempore exercitationem voluptatum libero repellat unde rerum, eligendi nostrum consequuntur alias, repudiandae corrupti id debitis quo quos tenetur.</p>
+            {/* height:`${height+5}rem` */}
+            <div
+              style={tabSize ? {} : {}}
+              className="ml-2 col-span-2 md:row-span-2 flex justify-center items-center h-20 mt-2 mx-2 md:h-full"
+            >
+              <img
+                src={`http://localhost:4000/${image}`}
+                alt="profile"
+                className="object-cover rounded-full w-20 h-20 md:w-44 md:h-44"
+              />
+            </div>
+            <div className="flex items-center justify-evenly col-span-4 md:row-span-1 h-20 mt-2 ml-1 md:h-8 md:justify-start md:max-w-[613px] md:ml-0 md:mt-5 md:pt-[68px] md:absolute md:flex-row">
+              <div className="hidden md:block md:max-w-[19.5rem] md:w-[31.5vw] text-transparent">|</div>
+              <div className="md:flex md:flex-row mr-3">
+                <p className="font-[650] md:mr-1">569</p>
+                <p className="font-medium">Posts</p>
+              </div>
+              <div className="md:flex mr-3">
+                <p className="font-[650] md:mr-1">71.2M</p>
+                <p className="font-medium">Followers</p>
+              </div>
+              <div className="md:flex mr-3">
+                <p className="font-[650] md:mr-1">2K</p>
+                <p className="font-medium">Following</p>
+              </div>
+            </div>
+            <div
+              ref={elementRef}
+              className="flex flex-col justify-start col-span-6 md:col-span-4 md:row-span-1 mb-20 md:h-auto md:max-w-[613px] md:ml-0 md:mb-0 md:mt-20"
+            >
+              <p className="text-lg font-bold">Manjesh Kumar Sharma</p>
+              <p className="text-md">
+                Lorem ipsum dolor, sit amet consectetur adipisicing elit. Sit
+                adipisci inventore amet dolores tenetur fuga magni, officiis
+                quaerat quia quasi fugiat quo animi illo reiciendis mollitia qui
+                eveniet enim veritatis exercitationem? Dolorum tempore
+                exercitationem voluptatum libero repellat unde rerum, eligendi
+                nostrum consequuntur alias, repudiandae corrupti id debitis quo
+                quos tenetur.
+              </p>
+            </div>
           </div>
-        </div>
-        <div className="h-8">
-          <div
-            style={{ marginTop: `-${height + 11.875}rem` }}
-            className={`flex justify-evenly fixed bg-green-200 py-[0.75rem] w-[100vw] z-10 border-b border-black`}
-          >
-            <button className="sm:hidden">Back</button>
-            <p>@manjeshkrsharma</p>
-            <button className="sm:hidden">Bell</button>
-            <button className="sm:hidden">:</button>
+          <div className="h-8 md:flex md:justify-start items-center md:h-12 md:absolute md:font-semibold md:text-lg md:mt-4 md:max-w-[613px]">
+            <div className="hidden md:block md:max-w-[19.5rem] md:w-[31.5vw] text-transparent">
+              |
+            </div>
+            <div
+              style={
+                tabSize
+                  ? { marginTop: `${0}rem` }
+                  : { marginTop: `-${height + 11.875}rem` }
+              }
+              className="flex justify-evenly fixed bg-green-200 py-[0.75rem] w-[100vw] z-10 border-b border-black md:block md:py-0 md:z-0 md:w-auto md:static md:items-center md:flex-row md:justify-start md:max-w-[613px]"
+            >
+              <button className="md:hidden">Back</button>
+              <p className="md:text-2xl">@manjeshkrsharma</p> {/* not more than 17 characters design problems might occur */} 
+              <button className="md:hidden">Bell</button>
+              <button className="md:hidden">:</button>
+            </div>
+            <div className="grid grid-cols-9 -translate-y-10 md:translate-y-0 md:flex md:justify-end">
+              <button className="col-span-4 border border-transparent mx-1 rounded bg-gray-500 text-center md:ml-4 font-medium">
+                Follow
+              </button>
+              <button className="col-span-4 border border-transparent mx-1 rounded bg-gray-500 text-center md:ml-4 font-medium">
+                Message
+              </button>
+              <button className="col-span-1 border border-transparent mx-1 rounded bg-gray-500 text-center font-medium md:hidden">
+                🤝
+              </button>
+            </div>
           </div>
-          <div className="grid grid-cols-9 -translate-y-10">
-            <button className="col-span-4 border border-transparent mx-1 rounded bg-gray-500 text-center font-medium">Follow</button>
-            <button className="col-span-4 border border-transparent mx-1 rounded bg-gray-500 text-center font-medium">Message</button>
-            <button className="col-span-1 border border-transparent mx-1 rounded bg-gray-500 text-center font-medium">🤝</button>
-          </div>
-        </div>
-      </div>                                                                                                  {/*top-12,sticky & -weebkit-sticky helps to get position sticky after 3rem from the top of the screen like instagram*/}
-      <div style={{ position:"-webkit-sticky"}} className="flex justify-around border-black border-b sticky h-8 top-12 bg-yellow-300">
-        <button className="focus:border-b-2 focus:border-black focus:mb-0 w-full mb-[2px]">Posts</button>
-        <button className="focus:border-b-2 focus:border-black focus:mb-0 w-full mb-[2px]">Reels</button>
-        <button className="focus:border-b-2 focus:border-black focus:mb-0 w-full mb-[2px]">Tags</button>
-      </div>
-      <UserPosts height={height}/>
-      <div className="flex justify-start items-center flex-row flex-wrap">
+        </div>{" "}
+        {/*top-12,sticky & -weebkit-sticky helps to get position sticky after 3rem from the top of the screen like instagram*/}
         <div
-          
-          className="w-[33.33vw] h-[33.33vw] sm:w-[24vw] sm:h-[24vw] bg-blue-300 flex flex-col justify-center items-center"
+          style={{ position: "-webkit-sticky" }}
+          className="flex justify-around md:px-44 border-black border-b sticky h-8 top-12 bg-yellow-300 md:border-t md:border-b-0"
         >
-          <img
-            src="https://dummyimage.com/721x401"
-            alt=""
-            className="object-cover w-[98%] h-[98%]"
-          />
+          <button className="focus:border-b-2 focus:border-black focus:mb-0 w-full mb-[2px] md:focus:border-t-2 md:focus:border-b-0">
+            Posts
+          </button>
+          <button className="focus:border-b-2 focus:border-black focus:mb-0 w-full mb-[2px] md:focus:border-t-2 md:focus:border-b-0">
+            Reels
+          </button>
+          <button className="focus:border-b-2 focus:border-black focus:mb-0 w-full mb-[2px] md:focus:border-t-2 md:focus:border-b-0">
+            Tags
+          </button>
         </div>
-        <div
-          
-          className="w-[33.33vw] h-[33.33vw] sm:w-[24vw] sm:h-[24vw] bg-blue-300 flex flex-col justify-center items-center"
-        >
-          <img
-            src="https://dummyimage.com/721x401"
-            alt=""
-            className="object-cover w-[98%] h-[98%]"
-          />
-        </div>
-        <div
-          
-          className="w-[33.33vw] h-[33.33vw] sm:w-[24vw] sm:h-[24vw] bg-blue-300 flex flex-col justify-center items-center"
-        >
-          <img
-            src="https://dummyimage.com/721x401"
-            alt=""
-            className="object-cover w-[98%] h-[98%]"
-          />
-        </div>
-        <div
-          
-          className="w-[33.33vw] h-[33.33vw] sm:w-[24vw] sm:h-[24vw] bg-blue-300 flex flex-col justify-center items-center"
-        >
-          <img
-            src="https://dummyimage.com/721x401"
-            alt=""
-            className="object-cover w-[98%] h-[98%]"
-          />
-        </div>
-        <div
-          
-          className="w-[33.33vw] h-[33.33vw] sm:w-[24vw] sm:h-[24vw] bg-blue-300 flex flex-col justify-center items-center"
-        >
-          <img
-            src="https://dummyimage.com/721x401"
-            alt=""
-            className="object-cover w-[98%] h-[98%]"
-          />
-        </div>
-        <div
-          
-          className="w-[33.33vw] h-[33.33vw] sm:w-[24vw] sm:h-[24vw] bg-blue-300 flex flex-col justify-center items-center"
-        >
-          <img
-            src="https://dummyimage.com/721x401"
-            alt=""
-            className="object-cover w-[98%] h-[98%]"
-          />
-        </div>
-        <div
-          
-          className="w-[33.33vw] h-[33.33vw] sm:w-[24vw] sm:h-[24vw] bg-blue-300 flex flex-col justify-center items-center"
-        >
-          <img
-            src="https://dummyimage.com/721x401"
-            alt=""
-            className="object-cover w-[98%] h-[98%]"
-          />
-        </div>
-        <div
-          
-          className="w-[33.33vw] h-[33.33vw] sm:w-[24vw] sm:h-[24vw] bg-blue-300 flex flex-col justify-center items-center"
-        >
-          <img
-            src="https://dummyimage.com/721x401"
-            alt=""
-            className="object-cover w-[98%] h-[98%]"
-          />
-        </div>
-        <div
-          
-          className="w-[33.33vw] h-[33.33vw] sm:w-[24vw] sm:h-[24vw] bg-blue-300 flex flex-col justify-center items-center"
-        >
-          <img
-            src="https://dummyimage.com/721x401"
-            alt=""
-            className="object-cover w-[98%] h-[98%]"
-          />
-        </div>
-        <div
-          
-          className="w-[33.33vw] h-[33.33vw] sm:w-[24vw] sm:h-[24vw] bg-blue-300 flex flex-col justify-center items-center"
-        >
-          <img
-            src="https://dummyimage.com/721x401"
-            alt=""
-            className="object-cover w-[98%] h-[98%]"
-          />
-        </div>
-        <div
-          
-          className="w-[33.33vw] h-[33.33vw] sm:w-[24vw] sm:h-[24vw] bg-blue-300 flex flex-col justify-center items-center"
-        >
-          <img
-            src="https://dummyimage.com/721x401"
-            alt=""
-            className="object-cover w-[98%] h-[98%]"
-          />
-        </div>
-        <div
-          
-          className="w-[33.33vw] h-[33.33vw] sm:w-[24vw] sm:h-[24vw] bg-blue-300 flex flex-col justify-center items-center"
-        >
-          <img
-            src="https://dummyimage.com/721x401"
-            alt=""
-            className="object-cover w-[98%] h-[98%]"
-          />
-        </div>
-        <div
-          
-          className="w-[33.33vw] h-[33.33vw] sm:w-[24vw] sm:h-[24vw] bg-blue-300 flex flex-col justify-center items-center"
-        >
-          <img
-            src="https://dummyimage.com/721x401"
-            alt=""
-            className="object-cover w-[98%] h-[98%]"
-          />
-        </div>
-        <div
-          
-          className="w-[33.33vw] h-[33.33vw] sm:w-[24vw] sm:h-[24vw] bg-blue-300 flex flex-col justify-center items-center"
-        >
-          <img
-            src="https://dummyimage.com/721x401"
-            alt=""
-            className="object-cover w-[98%] h-[98%]"
-          />
-        </div>
-        <div
-          
-          className="w-[33.33vw] h-[33.33vw] sm:w-[24vw] sm:h-[24vw] bg-blue-300 flex flex-col justify-center items-center"
-        >
-          <img
-            src="https://dummyimage.com/721x401"
-            alt=""
-            className="object-cover w-[98%] h-[98%]"
-          />
-        </div>
-        <div
-          
-          className="w-[33.33vw] h-[33.33vw] sm:w-[24vw] sm:h-[24vw] bg-blue-300 flex flex-col justify-center items-center"
-        >
-          <img
-            src="https://dummyimage.com/721x401"
-            alt=""
-            className="object-cover w-[98%] h-[98%]"
-          />
-        </div>
-        <div
-          
-          className="w-[33.33vw] h-[33.33vw] sm:w-[24vw] sm:h-[24vw] bg-blue-300 flex flex-col justify-center items-center"
-        >
-          <img
-            src="https://dummyimage.com/721x401"
-            alt=""
-            className="object-cover w-[98%] h-[98%]"
-          />
+        <div className="flex justify-start items-center flex-row flex-wrap md:justify-between md:gap-4 md:mt-4">
+          <UserPosts height={height} profileImage={profileImage} />
         </div>
       </div>
-    </>
+    </div>
   );
 };
 
