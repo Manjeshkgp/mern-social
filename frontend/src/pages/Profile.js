@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import Cookies from "js-cookie";
 import UserPosts from "../components/UserPosts";
+import userProfileImage from "../assets/user.png"
 
 const Profile = () => {
   const [height, setHeight] = useState(0);
@@ -23,8 +24,6 @@ const Profile = () => {
     fetchProfile();
     setHeight(elementRef.current.clientHeight / 16);
   }, []);
-  console.log(tabSize);
-  console.log(height);
   const profileImage = `http://localhost:4000/${image}`;
   // const base64String = image===[]?"":btoa(String.fromCharCode(...new Uint8Array(image)));
   // <img loading='lazy' src={`data:image/png;base64,${base64String}`} alt=""/>
@@ -54,13 +53,13 @@ const Profile = () => {
               className="ml-2 col-span-2 md:row-span-2 flex justify-center items-center h-20 mt-2 mx-2 md:h-full"
             >
               <img
+              onError={(e)=>e.currentTarget.src=userProfileImage}
                 src={`http://localhost:4000/${image}`}
                 alt="profile"
                 className="object-cover rounded-full w-20 h-20 md:w-44 md:h-44"
               />
             </div>
-            <div className="flex items-center justify-evenly col-span-4 md:row-span-1 h-20 mt-2 ml-1 md:h-8 md:justify-start md:max-w-[613px] md:ml-0 md:mt-5 md:pt-[68px] md:absolute md:flex-row">
-              <div className="hidden md:block md:max-w-[19.5rem] md:w-[31.5vw] text-transparent">|</div>
+            <div className="flex items-center justify-evenly col-span-4 md:row-span-1 h-20 mt-2 ml-1 md:h-8 md:justify-start md:max-w-[613px] md:ml-[31.6vw] md:mt-5 md:pt-[68px] md:absolute md:flex-row margin-break:ml-[19.5rem]">
               <div className="md:flex md:flex-row mr-3">
                 <p className="font-[650] md:mr-1">569</p>
                 <p className="font-medium">Posts</p>
@@ -91,16 +90,13 @@ const Profile = () => {
             </div>
           </div>
           <div className="h-8 md:flex md:justify-start items-center md:h-12 md:absolute md:font-semibold md:text-lg md:mt-4 md:max-w-[613px]">
-            <div className="hidden md:block md:max-w-[19.5rem] md:w-[31.5vw] text-transparent">
-              |
-            </div>
             <div
               style={
                 tabSize
                   ? { marginTop: `${0}rem` }
                   : { marginTop: `-${height + 11.875}rem` }
               }
-              className="flex justify-evenly fixed bg-green-200 py-[0.75rem] w-[100vw] z-10 border-b border-black md:block md:py-0 md:z-0 md:w-auto md:static md:items-center md:flex-row md:justify-start md:max-w-[613px]"
+              className="flex justify-evenly fixed bg-green-200 py-[0.75rem] w-[100vw] z-10 border-b border-black md:block md:py-0 md:z-0 md:w-auto md:static md:items-center md:flex-row md:justify-start md:max-w-[613px] md:ml-[31.6vw] margin-break:ml-[19.5rem]"
             >
               <button className="md:hidden">Back</button>
               <p className="md:text-2xl">@manjeshkrsharma</p> {/* not more than 17 characters design problems might occur */} 
@@ -119,11 +115,11 @@ const Profile = () => {
               </button>
             </div>
           </div>
-        </div>{" "}
+        </div>
         {/*top-12,sticky & -weebkit-sticky helps to get position sticky after 3rem from the top of the screen like instagram*/}
         <div
           style={{ position: "-webkit-sticky" }}
-          className="flex justify-around md:px-44 border-black border-b sticky h-8 top-12 bg-yellow-300 md:border-t md:border-b-0"
+          className="flex justify-around md:px-44 border-black border-b sticky h-8 top-12 bg-yellow-300 md:border-t md:border-b-0 md:static"
         >
           <button className="focus:border-b-2 focus:border-black focus:mb-0 w-full mb-[2px] md:focus:border-t-2 md:focus:border-b-0">
             Posts

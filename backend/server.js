@@ -4,6 +4,7 @@ import bodyParser from "body-parser";
 import dotenv from "dotenv";
 import connect from "./database/mongodb.js";
 import userRoute from "./routes/userRoute.js";
+import postsRoute from "./routes/postsRoutes.js";
 import passport from "passport";
 import passportConfig from "./config/passport.js";
 import path from "path";
@@ -25,6 +26,7 @@ app.get("/",(req,res)=>{
 })
 
 app.use("/",userRoute);
+app.use("/",postsRoute);
 
 app.use(passport.initialize());
 passportConfig(passport)

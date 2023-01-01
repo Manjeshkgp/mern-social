@@ -22,11 +22,16 @@ const router = express.Router();
 // REGISTER
 
 router.post("/register", async (req, res) => {
-  const { name, email, password } = await req.body;
+  const { name, email, password, username } = await req.body;
   //check if user exists with same email
   const userExist = await userSchema.findOne({ email });
+  const usernameExist = await userSchema.findOne({username:username.toLowerCase()});
   if (userExist) {
     res.status(406).json({ message: "User Already Existed" });
+    return;
+  }
+  if(usernameExist){
+    res.status(406).json({message:"Username Alrady Taken"});
     return;
   }
 
@@ -39,6 +44,7 @@ router.post("/register", async (req, res) => {
   const registerUser = new userSchema({
     name: name,
     email: email,
+    username:username.toLowerCase(),
     password: hashedPassword,
   });
 

@@ -7,6 +7,7 @@ module.exports = {
     screens: {
       'sm': '640px',
       'md': '767px', // changed from 768px to 767px because of Ipad Mini
+      "margin-break" : "975px",
       'lg': '1024px',
       'xl': '1280px',
       '2xl': '1536px',    

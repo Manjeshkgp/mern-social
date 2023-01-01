@@ -6,6 +6,7 @@ const SignUp = () => {
   const [revealPswd, setRevealPswd] = React.useState(false);
   const Initialform = {
     name:"",
+    username:"",
     email:"",
     password:""
   }
@@ -42,6 +43,18 @@ const SignUp = () => {
                 name="name"
                 id="name"
                 value={formdata.name}
+                onChange={(e)=>{editForm(e)}}
+                placeholder="John Cena"
+              />
+            </div>
+            <div className="box">
+              <label>Username</label>
+              <input
+                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                type="name"
+                name="username"
+                id="username"
+                value={formdata.username}
                 onChange={(e)=>{editForm(e)}}
                 placeholder="John Cena"
               />

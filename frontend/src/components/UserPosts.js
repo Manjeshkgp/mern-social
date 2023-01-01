@@ -1,11 +1,27 @@
-import { useState,useRef } from "react";
+import Cookies from "js-cookie";
+import { useState,useRef, useEffect } from "react";
 import {useNavigate,redirect} from "react-router-dom";
+import userProfileImage from "../assets/user.png";
 
 export default function UserPosts({height,profileImage}) {
   const navigate = useNavigate()
   const [isLongPress, setIsLongPress] = useState(false);
   const [longPressImage,setLongPressImage] = useState("");
   const timeoutId = useRef(null);
+  const identification = Cookies.get("identification")
+  const token = Cookies.get("token")
+
+  const fetchPosts = async () => {
+    const res = fetch(`http://localhost:4000/users/post/${identification}`,{
+      headers:{
+      Authorization:`Bearer ${token}`,
+      "content-type":"application/json",
+      }
+    })
+    if((await res).status===200){
+    const data = (await res).json();
+    console.log(data)}
+  }
 
   const handleTouchStart = (e) => {
     console.log("touch start")
@@ -24,11 +40,11 @@ export default function UserPosts({height,profileImage}) {
     console.log("touch end")
     setIsLongPress(false);
   };
+  useEffect(()=>{
+    fetchPosts()
+  },[])
   if(isLongPress){
     window.document.body.style.overflowY = "hidden";
-    // const body =window.document.body
-    // const abc =window.getComputedStyle(body)
-    // console.log(abc)
   }else{
     window.document.body.style.overflowY = "auto";
   }
@@ -39,7 +55,7 @@ export default function UserPosts({height,profileImage}) {
           <div style={{transform:`translateY(-${height+17.8}rem)`}} className='fixed flex justify-center items-center h-[100vh] w-[100vw] z-30'>
             <div className="w-[95%] bg-slate-600 flex flex-col rounded-lg customShadow">
               <div className="h-12 flex items-center justify-start">
-                <img src={profileImage} alt="" className="h-8 w-8 rounded-full object-cover ml-2"/>
+                <img onError={(e)=>e.currentTarget.src=userProfileImage} src={profileImage} alt="" className="h-8 w-8 rounded-full object-cover ml-2"/>
                 <p className="ml-2 font-medium">@manjeshkrsharma</p>
               </div>
               <img src={`${longPressImage}`} alt="" className="w-[100%] max-h-[calc(100vh_-_12rem)] object-cover h-auto"/>
