@@ -42,7 +42,7 @@ const Profile = () => {
           style={
             tabSize
               ? { height: `${height + 8.875}rem` }
-              : { height: `${height + 8.875}rem` }
+              : { height: `${height + 9.875}rem` }
           }
           className={`bg-red-200 mt-12 grid overflow-hidden`}
         >
@@ -104,13 +104,14 @@ const Profile = () => {
                   : { marginTop: `-${height + 11.875}rem` }
               }
               className="flex justify-evenly fixed bg-green-200 py-[0.75rem] w-[100vw] z-10 border-b border-black md:block md:py-0 md:z-0 md:w-auto md:static md:items-center md:flex-row md:justify-start md:max-w-[613px] md:ml-[28.8vw] lg:ml-[19rem] xl:ml-[19.5rem]"
+              // className="flex justify-evenly bg-green-200 py-[0.75rem] w-[100vw] z-10 border-b border-black absolute top-0" try this for mobile devices
             >
               <button className="md:hidden">Back</button>
               <p className="md:text-2xl">{username}</p> {/* not more than 17 characters design problems might occur */} 
               <button className="md:hidden">Bell</button>
               <button className="md:hidden">:</button>
             </div>
-            <div className="grid grid-cols-9 -translate-y-10 md:translate-y-0 md:flex md:justify-end">
+            <div className="grid grid-cols-9 -translate-y-4 md:translate-y-0 md:flex md:justify-end">
               <button className="col-span-4 border border-transparent mx-1 rounded bg-gray-500 text-center md:ml-4 font-medium">
                 Follow
               </button>

@@ -20,7 +20,11 @@ const router = createBrowserRouter([
     children: [
       {
         path: "/",
-        element: <CheckUser><Home /></CheckUser>,
+        element: (
+          <CheckUser>
+            <Home />
+          </CheckUser>
+        ),
       },
       {
         path: "/about",
@@ -28,17 +32,37 @@ const router = createBrowserRouter([
       },
       {
         path: "/login",
-        element: <UserIsAuthenticated><Login /></UserIsAuthenticated>,
+        element: (
+          <UserIsAuthenticated>
+            <Login />
+          </UserIsAuthenticated>
+        ),
       },
       {
         path: "/signup",
-        element: <UserIsAuthenticated><SignUp /></UserIsAuthenticated>,
+        element: (
+          <UserIsAuthenticated>
+            <SignUp />
+          </UserIsAuthenticated>
+        ),
+      },
+      {
+        path: "/profile",
+        element: (
+          <CheckUser>
+            <Profile />
+          </CheckUser>
+        ),
       },
     ],
   },
   {
-    path: "/profile",
-    element: <CheckUser><Profile/></CheckUser>,
+    path: "*",
+    element: (
+      <CheckUser>
+        <Home />
+      </CheckUser>
+    ),
   },
 ]);
 
