@@ -19,7 +19,6 @@ app.use(bodyParser.urlencoded({extended:false}));
 app.use(bodyParser.json());
 app.use("/uploads",express.static(path.join(__dirname,"uploads")));
 await connect();
-console.log("MongoDB connected successfully");
 
 app.get("/",(req,res)=>{
     res.send("<h1>Home</h1>")
