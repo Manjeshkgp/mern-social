@@ -8,6 +8,9 @@ const Profile = () => {
   const elementRef = useRef(null);
   const tabSize = window.matchMedia("(min-width: 767px)").matches;
   const [image, setImage] = useState("");
+  const [posts,setPosts] = useState([]);
+  const [username,setUsername] = useState("");
+  const [profileName,setProfileName] = useState("");
   const identification = Cookies.get("identification");
   const token = Cookies.get("token");
   const fetchProfile = async () => {
@@ -17,8 +20,12 @@ const Profile = () => {
         contentType: "image/png",
       },
     });
-    const imageurl = await res.json();
-    setImage(imageurl.image);
+    const profileData = await res.json();
+    setImage(profileData.image);
+    setPosts(profileData.posts);
+    setUsername(profileData.username);
+    setProfileName(profileData.name);
+    // console.log(profileData)
   };
   useEffect(() => {
     fetchProfile();
@@ -29,7 +36,7 @@ const Profile = () => {
   // <img loading='lazy' src={`data:image/png;base64,${base64String}`} alt=""/>
   // everythin was fine just middleware loading causing some problem, see the browser console
   return (
-    <div className="md:flex md:justify-center">
+    <div className="md:flex md:justify-center md:ml-[72px]">
       <div className="md:mx-5 md:max-w-[935px]">
         <div
           style={
@@ -59,9 +66,9 @@ const Profile = () => {
                 className="object-cover rounded-full w-20 h-20 md:w-44 md:h-44"
               />
             </div>
-            <div className="flex items-center justify-evenly col-span-4 md:row-span-1 h-20 mt-2 ml-1 md:h-8 md:justify-start md:max-w-[613px] md:ml-[31.6vw] md:mt-5 md:pt-[68px] md:absolute md:flex-row margin-break:ml-[19.5rem]">
+            <div className="flex items-center justify-evenly col-span-4 md:row-span-1 h-20 mt-2 ml-1 md:h-8 md:justify-start md:max-w-[613px] md:ml-[28.8vw] md:mt-5 md:pt-[68px] md:absolute md:flex-row lg:ml-[19rem] xl:ml-[19.5rem]">
               <div className="md:flex md:flex-row mr-3">
-                <p className="font-[650] md:mr-1">569</p>
+                <p className="font-[650] md:mr-1">{posts.length}</p>
                 <p className="font-medium">Posts</p>
               </div>
               <div className="md:flex mr-3">
@@ -77,7 +84,7 @@ const Profile = () => {
               ref={elementRef}
               className="flex flex-col justify-start col-span-6 md:col-span-4 md:row-span-1 mb-20 md:h-auto md:max-w-[613px] md:ml-0 md:mb-0 md:mt-20"
             >
-              <p className="text-lg font-bold">Manjesh Kumar Sharma</p>
+              <p className="text-lg font-bold">{profileName}</p>
               <p className="text-md">
                 Lorem ipsum dolor, sit amet consectetur adipisicing elit. Sit
                 adipisci inventore amet dolores tenetur fuga magni, officiis
@@ -96,10 +103,10 @@ const Profile = () => {
                   ? { marginTop: `${0}rem` }
                   : { marginTop: `-${height + 11.875}rem` }
               }
-              className="flex justify-evenly fixed bg-green-200 py-[0.75rem] w-[100vw] z-10 border-b border-black md:block md:py-0 md:z-0 md:w-auto md:static md:items-center md:flex-row md:justify-start md:max-w-[613px] md:ml-[31.6vw] margin-break:ml-[19.5rem]"
+              className="flex justify-evenly fixed bg-green-200 py-[0.75rem] w-[100vw] z-10 border-b border-black md:block md:py-0 md:z-0 md:w-auto md:static md:items-center md:flex-row md:justify-start md:max-w-[613px] md:ml-[28.8vw] lg:ml-[19rem] xl:ml-[19.5rem]"
             >
               <button className="md:hidden">Back</button>
-              <p className="md:text-2xl">@manjeshkrsharma</p> {/* not more than 17 characters design problems might occur */} 
+              <p className="md:text-2xl">{username}</p> {/* not more than 17 characters design problems might occur */} 
               <button className="md:hidden">Bell</button>
               <button className="md:hidden">:</button>
             </div>
@@ -131,8 +138,8 @@ const Profile = () => {
             Tags
           </button>
         </div>
-        <div className="flex justify-start items-center flex-row flex-wrap md:justify-between md:gap-4 md:mt-4">
-          <UserPosts height={height} profileImage={profileImage} />
+        <div className="flex justify-start items-center flex-row flex-wrap md:justify-around md:gap-4 md:mt-4 margin-break:mx-2 mb-12">
+          <UserPosts height={height} profileImage={profileImage} posts={posts}/>
         </div>
       </div>
     </div>

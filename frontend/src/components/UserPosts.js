@@ -1,27 +1,12 @@
-import Cookies from "js-cookie";
-import { useState,useRef, useEffect } from "react";
+import { useState,useRef } from "react";
 import {useNavigate,redirect} from "react-router-dom";
 import userProfileImage from "../assets/user.png";
 
-export default function UserPosts({height,profileImage}) {
+export default function UserPosts({height,profileImage,posts}) {
   const navigate = useNavigate()
   const [isLongPress, setIsLongPress] = useState(false);
   const [longPressImage,setLongPressImage] = useState("");
   const timeoutId = useRef(null);
-  const identification = Cookies.get("identification")
-  const token = Cookies.get("token")
-
-  const fetchPosts = async () => {
-    const res = fetch(`http://localhost:4000/users/post/${identification}`,{
-      headers:{
-      Authorization:`Bearer ${token}`,
-      "content-type":"application/json",
-      }
-    })
-    if((await res).status===200){
-    const data = (await res).json();
-    console.log(data)}
-  }
 
   const handleTouchStart = (e) => {
     console.log("touch start")
@@ -40,14 +25,13 @@ export default function UserPosts({height,profileImage}) {
     console.log("touch end")
     setIsLongPress(false);
   };
-  useEffect(()=>{
-    fetchPosts()
-  },[])
   if(isLongPress){
     window.document.body.style.overflowY = "hidden";
   }else{
     window.document.body.style.overflowY = "auto";
   }
+
+  posts.map((singlePost)=>console.log(singlePost?.imgUrl))
   return (
     <>
       {isLongPress ? (
@@ -71,107 +55,17 @@ export default function UserPosts({height,profileImage}) {
       ) : (
         ""
       )}
-      {/* <img src="https://dummyimage.com/800x1200" alt="" onTouchStart={(e)=>handleTouchStart(e)} onTouchEnd={handleTouchEnd} onTouchMove={()=>handleTouchMove()} onClick={()=>window.location.href = "http://localhost:3000/"}/> */}
-      <div
-          
-          className="w-[33.33vw] h-[33.33vw] md:w-[30vw] md:h-[30vw] md:max-h-[295px] md:max-w-[295px] bg-blue-300 flex flex-col justify-center items-center"
+      {posts.map((singlePost)=>(<div
+          key={singlePost?._id}
+          className="w-[33.33vw] h-[33.33vw] md:w-[31%] md:h-[30vw] md:max-h-[295px] md:max-w-[295px] bg-blue-300 flex flex-col justify-center items-center"
         >
           <img
-            src="https://dummyimage.com/721x401"
+            src={`http://localhost:4000/${singlePost?.imgUrl}`}
             alt=""
             className="object-cover w-[98%] h-[98%]" onTouchStart={(e)=>handleTouchStart(e)} onTouchEnd={handleTouchEnd} onTouchMove={()=>handleTouchMove()} onClick={()=>window.location.href = "http://localhost:3000/"}
           />
-        </div>
-        <div
-          
-          className="w-[33.33vw] h-[33.33vw] md:w-[30vw] md:h-[30vw] md:max-h-[295px] md:max-w-[295px] bg-blue-300 flex flex-col justify-center items-center"
-        >
-          <img
-            src="https://dummyimage.com/721x401"
-            alt=""
-            className="object-cover w-[98%] h-[98%]" onTouchStart={(e)=>handleTouchStart(e)} onTouchEnd={handleTouchEnd} onTouchMove={()=>handleTouchMove()} onClick={()=>window.location.href = "http://localhost:3000/"}
-          />
-        </div>
-        <div
-          
-          className="w-[33.33vw] h-[33.33vw] md:w-[30vw] md:h-[30vw] md:max-h-[295px] md:max-w-[295px] bg-blue-300 flex flex-col justify-center items-center"
-        >
-          <img
-            src="https://dummyimage.com/721x401"
-            alt=""
-            className="object-cover w-[98%] h-[98%]" onTouchStart={(e)=>handleTouchStart(e)} onTouchEnd={handleTouchEnd} onTouchMove={()=>handleTouchMove()} onClick={()=>window.location.href = "http://localhost:3000/"}
-          />
-        </div>
-        <div
-          
-          className="w-[33.33vw] h-[33.33vw] md:w-[30vw] md:h-[30vw] md:max-h-[295px] md:max-w-[295px] bg-blue-300 flex flex-col justify-center items-center"
-        >
-          <img
-            src="https://dummyimage.com/721x401"
-            alt=""
-            className="object-cover w-[98%] h-[98%]" onTouchStart={(e)=>handleTouchStart(e)} onTouchEnd={handleTouchEnd} onTouchMove={()=>handleTouchMove()} onClick={()=>window.location.href = "http://localhost:3000/"}
-          />
-        </div>
-        <div
-          
-          className="w-[33.33vw] h-[33.33vw] md:w-[30vw] md:h-[30vw] md:max-h-[295px] md:max-w-[295px] bg-blue-300 flex flex-col justify-center items-center"
-        >
-          <img
-            src="https://dummyimage.com/721x401"
-            alt=""
-            className="object-cover w-[98%] h-[98%]" onTouchStart={(e)=>handleTouchStart(e)} onTouchEnd={handleTouchEnd} onTouchMove={()=>handleTouchMove()} onClick={()=>window.location.href = "http://localhost:3000/"}
-          />
-        </div>
-        <div
-          
-          className="w-[33.33vw] h-[33.33vw] md:w-[30vw] md:h-[30vw] md:max-h-[295px] md:max-w-[295px] bg-blue-300 flex flex-col justify-center items-center"
-        >
-          <img
-            src="https://dummyimage.com/721x401"
-            alt=""
-            className="object-cover w-[98%] h-[98%]" onTouchStart={(e)=>handleTouchStart(e)} onTouchEnd={handleTouchEnd} onTouchMove={()=>handleTouchMove()} onClick={()=>window.location.href = "http://localhost:3000/"}
-          />
-        </div>
-        <div
-          
-          className="w-[33.33vw] h-[33.33vw] md:w-[30vw] md:h-[30vw] md:max-h-[295px] md:max-w-[295px] bg-blue-300 flex flex-col justify-center items-center"
-        >
-          <img
-            src="https://dummyimage.com/721x401"
-            alt=""
-            className="object-cover w-[98%] h-[98%]" onTouchStart={(e)=>handleTouchStart(e)} onTouchEnd={handleTouchEnd} onTouchMove={()=>handleTouchMove()} onClick={()=>window.location.href = "http://localhost:3000/"}
-          />
-        </div>
-        <div
-          
-          className="w-[33.33vw] h-[33.33vw] md:w-[30vw] md:h-[30vw] md:max-h-[295px] md:max-w-[295px] bg-blue-300 flex flex-col justify-center items-center"
-        >
-          <img
-            src="https://dummyimage.com/721x401"
-            alt=""
-            className="object-cover w-[98%] h-[98%]" onTouchStart={(e)=>handleTouchStart(e)} onTouchEnd={handleTouchEnd} onTouchMove={()=>handleTouchMove()} onClick={()=>window.location.href = "http://localhost:3000/"}
-          />
-        </div>
-        <div
-          
-          className="w-[33.33vw] h-[33.33vw] md:w-[30vw] md:h-[30vw] md:max-h-[295px] md:max-w-[295px] bg-blue-300 flex flex-col justify-center items-center"
-        >
-          <img
-            src="https://dummyimage.com/721x401"
-            alt=""
-            className="object-cover w-[98%] h-[98%]" onTouchStart={(e)=>handleTouchStart(e)} onTouchEnd={handleTouchEnd} onTouchMove={()=>handleTouchMove()} onClick={()=>window.location.href = "http://localhost:3000/"}
-          />
-        </div>
-        <div
-          
-          className="w-[33.33vw] h-[33.33vw] md:w-[30vw] md:h-[30vw] md:max-h-[295px] md:max-w-[295px] bg-blue-300 flex flex-col justify-center items-center"
-        >
-          <img
-            src="https://dummyimage.com/721x401"
-            alt=""
-            className="object-cover w-[98%] h-[98%]" onTouchStart={(e)=>handleTouchStart(e)} onTouchEnd={handleTouchEnd} onTouchMove={()=>handleTouchMove()} onClick={()=>window.location.href = "http://localhost:3000/"}
-          />
-        </div>
+        </div>))}
+      
     </>
   );
 }

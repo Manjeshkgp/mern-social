@@ -33,9 +33,8 @@ router.post("/users/post/:id",auth,upload.single("postImage"),async (req, res) =
   }
   const saveImage = new postSchema({
         description:req.body.description,
-        data: fs.readFileSync("posts/" + req.file.filename),
-        contentType: "image/png",  
-        imgUrl:req.file.path,    
+        contentType: "image/png",
+        imgUrl:req.file.path, 
       });
   saveImage.save().then((result)=>{console.log("Image Saved Successfully")}).catch((err)=>{console.log(err)});
   userExist.posts.push(saveImage)
@@ -59,7 +58,7 @@ router.get("/users/post/:id",auth,async(req,res)=>{
     console.log(userExist);
     return;
   }
-  res.json(userExist?.posts);
+  res.json({posts:userExist?.posts});
 })
 
 export default router;

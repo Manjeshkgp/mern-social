@@ -18,6 +18,7 @@ app.use(cors());
 app.use(bodyParser.urlencoded({extended:false}));
 app.use(bodyParser.json());
 app.use("/uploads",express.static(path.join(__dirname,"uploads")));
+app.use("/posts",express.static(path.join(__dirname,"posts")));
 await connect();
 
 app.get("/",(req,res)=>{

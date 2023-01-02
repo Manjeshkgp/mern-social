@@ -2,7 +2,6 @@ import mongoose, { Schema } from "mongoose";
 
 const postSchema = new Schema({
     description:String,
-    data:Buffer,
     contentType:String,
     imgUrl:String,
     likes:{type:Number,default:0},

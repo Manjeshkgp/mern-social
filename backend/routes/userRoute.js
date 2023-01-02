@@ -104,7 +104,6 @@ router.post(
       {
         $set: {
           profileImage: {
-            data: fs.readFileSync("uploads/" + req.file.filename),
             contentType: "image/png",
             imgUrl:req.file.path,
           },
@@ -121,9 +120,9 @@ router.post(
 
 router.get("/users/:id",passport.authenticate("jwt",{session:false}),async(req,res)=>{
   const _id = req.params.id;
-  const {profileImage} = await userSchema.findOne({_id:_id})
+  const {profileImage,posts,username,name} = await userSchema.findOne({_id:_id})
   const image = profileImage.imgUrl
-  res.json({image});
+  res.json({image,posts,username,name});
 })
 
 // TESTING AUTHENTICATION
