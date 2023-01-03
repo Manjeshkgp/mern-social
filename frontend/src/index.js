@@ -30,22 +30,7 @@ const router = createBrowserRouter([
         path: "/about",
         element: <About />,
       },
-      {
-        path: "/login",
-        element: (
-          <UserIsAuthenticated>
-            <Login />
-          </UserIsAuthenticated>
-        ),
-      },
-      {
-        path: "/signup",
-        element: (
-          <UserIsAuthenticated>
-            <SignUp />
-          </UserIsAuthenticated>
-        ),
-      },
+
       {
         path: "/profile",
         element: (
@@ -62,6 +47,22 @@ const router = createBrowserRouter([
       <CheckUser>
         <Home />
       </CheckUser>
+    ),
+  },
+  {
+    path: "/login",
+    element: (
+      <UserIsAuthenticated>
+        <Login />
+      </UserIsAuthenticated>
+    ),
+  },
+  {
+    path: "/signup",
+    element: (
+      <UserIsAuthenticated>
+        <SignUp />
+      </UserIsAuthenticated>
     ),
   },
 ]);
