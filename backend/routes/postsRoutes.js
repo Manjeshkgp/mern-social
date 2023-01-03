@@ -31,8 +31,9 @@ router.post("/users/post/:id",auth,upload.single("postImage"),async (req, res) =
     console.log(userExist);
     return;
   }
-  const saveImage = new postSchema({
+  const saveImage = await new postSchema({
         description:req.body.description,
+        postedBy:userExist.username,
         contentType: "image/png",
         imgUrl:req.file.path, 
       });
@@ -44,21 +45,33 @@ router.post("/users/post/:id",auth,upload.single("postImage"),async (req, res) =
   console.log(req.file.path)
 })
 
-// GET POSTS
+// GET POSTS // not much useful cause another route is doing the bigger work including this
 
-router.get("/users/post/:id",auth,async(req,res)=>{
+// router.get("/users/post/:id",auth,async(req,res)=>{
+//   const _id = req.params.id;
+//   if (_id.length !== 24) {
+//     res.status(406).json({ message: `${_id} is invalid` });
+//     return;
+//   }
+//   const userExist = await userSchema.findOne({ _id: _id });
+//   if (!userExist || userExist === null) {
+//     res.status(403).json({ message: "User not found" });
+//     console.log(userExist);
+//     return;
+//   }
+//   res.json({posts:userExist?.posts});
+// })
+
+// GET POSTS FOR HOME PAGE
+
+router.get("/allposts/:id",auth,async(req,res)=>{
   const _id = req.params.id;
   if (_id.length !== 24) {
     res.status(406).json({ message: `${_id} is invalid` });
     return;
   }
-  const userExist = await userSchema.findOne({ _id: _id });
-  if (!userExist || userExist === null) {
-    res.status(403).json({ message: "User not found" });
-    console.log(userExist);
-    return;
-  }
-  res.json({posts:userExist?.posts});
+  const allposts = await postSchema.find().sort({postedAt:-1});
+  res.json({allposts:allposts});
 })
 
 export default router;
