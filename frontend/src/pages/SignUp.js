@@ -35,8 +35,8 @@ const SignUp = () => {
 
   return (
     <><div className=" overflow-x-hidden flex justify-center items-center">
-      <div className="flex justify-center items-center bg-blue-100 min-h-screen w-[320px] md:w-auto max-w-[100vw] flex-col">
-        <div className="w-[300px] md:w-[21.75rem] bg-green-300 h-[32rem] flex justify-center items-center flex-col border border-black md:mt-12">
+      <div className="flex justify-center items-center min-h-screen w-[320px] md:w-auto max-w-[100vw] flex-col">
+        <div className="w-[300px] md:w-[21.75rem] h-[32rem] flex justify-center items-center flex-col border border-black md:mt-12">
           <img src={Logo} alt="" className=" mb-4"/>
           <p className="mb-4 text-lg font-bold w-60 text-center">Sign up to see photos from your friends.</p>
           <form className="grid" onSubmit={(e)=>{formSubmit(e)}}>
