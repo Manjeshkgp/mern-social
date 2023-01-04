@@ -34,6 +34,7 @@ router.post("/users/post/:id",auth,upload.single("postImage"),async (req, res) =
   const saveImage = await new postSchema({
         description:req.body.description,
         postedBy:userExist.username,
+        postedByProfileImage:userExist.profileImage.imgUrl?userExist.profileImage.imgUrl:"",
         contentType: "image/png",
         imgUrl:req.file.path, 
       });
