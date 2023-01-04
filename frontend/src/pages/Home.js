@@ -45,7 +45,22 @@ const Home = () => {
           </div>
         </div>
         <div className="postsDiv">
-          
+          <div className='flex justify-center items-center'>
+            <div className="bg-orange-300 my-4 flex flex-col rounded-lg">
+              <div className="h-12 flex items-center justify-start">
+                 {/*onError={(e)=>e.currentTarget.src=userProfileImage}*/}
+                <img src="https://dummyimage.com/720x300" alt="" className="h-8 w-8 rounded-full object-cover ml-2"/>
+                <p className="ml-2 font-medium">@manjeshkrsharma</p>
+              </div>
+              <img src="https://dummyimage.com/720x300" alt="" className="w-[100%] max-h-[calc(100vh_-_12rem)] object-cover h-auto"/>
+              <div className="flex items-center justify-around h-12">
+                <p className="font-medium">Like</p>
+                <p className="font-medium">Comment</p>
+                <p className="font-medium">Share</p>
+                <p className="font-medium">3dot</p>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
       <div className="bg-green-200 hidden lg:block w-80">b</div>

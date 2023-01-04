@@ -11,7 +11,7 @@ const Navbar = () => {
   };
 
   return (
-    <nav className="bg-black text-white h-10 w-full flex justify-around items-center absolute bottom-0 z-30 md:w-[72px] xl:w-[220px] md:h-full md:left-0 md:flex-col md:justify-start gap-y-16 md:fixed xl:items-start">
+    <nav className="bg-black text-white h-10 w-full flex justify-around items-center fixed bottom-0 z-30 md:w-[72px] xl:w-[220px] md:h-full md:left-0 md:flex-col md:justify-start gap-y-16 xl:items-start">
       <div className="md:mt-12 xl:ml-4">
         <Link to="/"><div className="flex justify-center"><HomeIcon/><span className="hidden xl:block ml-6 text-lg">Home</span></div></Link>
       </div>
