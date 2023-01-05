@@ -34,6 +34,7 @@ const Login = () => {
       const { token, user } = await res.json();
       Cookies.set("token", token);
       Cookies.set("identification",user._id)
+      Cookies.set("username",user.username)
       dispatch(giveAccess(user));
       navigate("/");
       console.log(user);
