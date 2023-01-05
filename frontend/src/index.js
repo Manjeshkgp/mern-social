@@ -8,6 +8,7 @@ import Home from "./pages/Home";
 import Login from "./pages/Login";
 import SignUp from "./pages/SignUp";
 import Profile from "./pages/Profile";
+import Postpost from "./pages/Postpost";
 import { Provider } from "react-redux";
 import store from "./store/store.js";
 import CheckUser from "./authentication/CheckUser";
@@ -36,6 +37,14 @@ const router = createBrowserRouter([
         element: (
           <CheckUser>
             <Profile />
+          </CheckUser>
+        ),
+      },
+      {
+        path: "/create",
+        element: (
+          <CheckUser>
+            <Postpost />
           </CheckUser>
         ),
       },

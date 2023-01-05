@@ -12,7 +12,11 @@ module.exports = {
       'xl': '1280px',
       '2xl': '1536px',    
     },
-    extend: {},
+    extend: {
+      colors: {
+        'black-rgba': 'rgba(0, 0, 0, 0.54)',
+      },
+    },
   },
   plugins: [],
 }
