@@ -4,6 +4,13 @@
 .customShadow{
     box-shadow: 0 0 100vh 50vh rgba(0, 0, 0, 0.466);
 }
+.customEllipsis{
+  display: -webkit-box;
+-webkit-line-clamp: 3;
+-webkit-box-orient: vertical;
+overflow: hidden;
+text-overflow: ellipsis;
+}
 .alert-toast {
     -webkit-animation: slide-in-right 0.5s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
     animation: slide-in-right 0.5s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
