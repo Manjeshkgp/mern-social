@@ -1,8 +1,10 @@
 import React, { useEffect } from "react";
 import userProfileImage from "../assets/user.png";
-import { LikeIcon, CommentIcon, ShareIcon, SaveIcon } from "../assets/Icons.js";
+import { LikeIcon, CommentIcon, ShareIcon, SaveIcon, LikedIcon } from "../assets/Icons.js";
+import Cookies from "js-cookie";
 
 const Postsdiv = ({ allPostsState, scrollTo }) => {
+    const username = Cookies.get("username");
   const descControl = (e) => {
     const classes = e.currentTarget.classList;
     if (classes.contains("customEllipsis")) {
@@ -24,6 +26,10 @@ const Postsdiv = ({ allPostsState, scrollTo }) => {
   useEffect(()=>{
     executeScroll()
   },[scrollTo])
+
+//   allPostsState.map((singlePost)=>{console.log(singlePost.likesArray.some(obj=>obj.username===username))}) // returns true/false
+//   allPostsState.map((singlePost)=>{console.log(singlePost.likesArray.find(obj=>obj.username===username))}) // returns whole object/element or undefined when array doesn't have the desired string
+  
   return (
     <>
       {allPostsState.map((singlePost) => (
@@ -51,7 +57,7 @@ const Postsdiv = ({ allPostsState, scrollTo }) => {
             />
             <div className="flex items-center justify-around h-12 border-b border-[#262626]">
               <p className="font-medium text-white">
-                <LikeIcon />
+                {singlePost.likesArray.some(obj=>obj.username===username)?<LikedIcon/>:<LikeIcon/>}
               </p>
               <p className="font-medium text-white">
                 <CommentIcon />
@@ -65,7 +71,7 @@ const Postsdiv = ({ allPostsState, scrollTo }) => {
             </div>
             <div className="flex items-start flex-col justify-around mb-1">
               <div className="ml-2 mr-2 font-semibold text-white">
-                {singlePost.likes} Likes
+                {singlePost.likesArray.length} Likes
               </div>
               <div className="ml-2 mr-2">
                 <p

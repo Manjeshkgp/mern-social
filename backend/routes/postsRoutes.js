@@ -75,4 +75,17 @@ router.get("/allposts/:id",auth,async(req,res)=>{
   res.json({allposts:allposts});
 })
 
+// LIKE A POST
+
+router.post("/allposts/like/:username",auth,async(req,res)=>{
+  const username = req.params.username;
+  const userProfileImage = req.body.userProfileImage;
+  const postId = req.body.postId;
+  
+  const thePost = await postSchema.findOne({_id:postId});
+  await thePost.likesArray.push({username:username,userProfileImage:userProfileImage});
+  thePost.save().then((result)=>console.log("liked the post")).catch((err)=>console.log(err));
+  res.status(200).json({message:"Liked the post"})
+})
+
 export default router;

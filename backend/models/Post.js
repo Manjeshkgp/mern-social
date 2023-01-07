@@ -6,7 +6,7 @@ const postSchema = new Schema({
     postedBy:String,
     postedByProfileImage:String,
     imgUrl:String,
-    likes:{type:Number,default:0},
+    likesArray:[Object],
     comments:[Object],
     postedAt:{ type: Date, default: Date.now }
 })
