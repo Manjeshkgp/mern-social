@@ -88,4 +88,13 @@ router.post("/allposts/like/:username",auth,async(req,res)=>{
   res.status(200).json({message:"Liked the post"})
 })
 
+router.patch("/allposts/unlike/:username",auth,async(req,res)=>{
+  const username = req.params.username;
+  const postId = req.body.postId;
+  
+  const thePost = await postSchema.findOneAndUpdate({_id:postId},{ $pull: { likesArray: { username:username } } });
+  thePost.save().then((result)=>console.log("Unliked the post")).catch((err)=>console.log(err));
+  res.status(200).json({message:"Unliked the post"})
+})
+
 export default router;
