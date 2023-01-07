@@ -2,7 +2,7 @@ import { useState,useRef } from "react";
 import {useNavigate,redirect} from "react-router-dom";
 import userProfileImage from "../assets/user.png";
 
-export default function UserPosts({height,profileImage,posts}) {
+export default function UserPosts({height,profileImage,posts,setShowPostsdiv,setScrollTo}) {
   const navigate = useNavigate()
   const [isLongPress, setIsLongPress] = useState(false);
   const [longPressImage,setLongPressImage] = useState("");
@@ -62,7 +62,7 @@ export default function UserPosts({height,profileImage,posts}) {
           <img
             src={`http://localhost:4000/${singlePost?.imgUrl}`}
             alt=""
-            className="object-cover w-[98%] h-[98%]" onTouchStart={(e)=>handleTouchStart(e)} onTouchEnd={handleTouchEnd} onTouchMove={()=>handleTouchMove()} onClick={()=>window.location.href = "http://localhost:3000/"}
+            className="object-cover w-[98%] h-[98%]" onTouchStart={(e)=>handleTouchStart(e)} onTouchEnd={handleTouchEnd} onTouchMove={()=>handleTouchMove()} onClick={(e)=>{setShowPostsdiv(true);setScrollTo(singlePost._id)}}
           />
         </div>))}
       
