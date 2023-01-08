@@ -97,7 +97,7 @@ router.get("/allposts/:id", auth, async (req, res) => {
   res.json({ allposts: allposts });
 });
 
-// LIKE A POST
+// LIKE AND UNLIKE A POST
 
 router.post("/allposts/like/:username", auth, async (req, res) => {
   const username = req.params.username;
@@ -106,16 +106,37 @@ router.post("/allposts/like/:username", auth, async (req, res) => {
   const thePost = await postSchema.findOne({ _id: postId });
   const postedBy = await thePost?.postedBy;
   if (thePost.likesArray.some((obj) => obj.username === username)) {
-    res.json({ message: "Already Liked" });
+    await postSchema
+      .findOneAndUpdate(
+        { _id: postId },
+        { $pull: { likesArray: { username: username } } }
+      )
+      .then((res) => console.log("unliked the post"))
+      .catch((err) => console.log(err));
+    await userSchema
+      .findOneAndUpdate(
+        { username: postedBy },
+        {
+          $pull: {
+            "posts.$[post].likesArray": { username: { $eq: username } },
+          },
+        },
+        { arrayFilters: [{ "post._id": postId }] }
+      )
+      .then((result) => {
+        console.log("unliked post pushed");
+      })
+      .catch((err) => console.log(err));
+    res.json({ message: "Post unliked" });
   } else {
     await thePost.likesArray.push({ username: username });
     await thePost.save();
     console.log("thePost is liked");
     await userSchema
       .findOneAndUpdate(
-        { "username": postedBy },
-        { $addToSet: { "posts.$[post].likesArray": { "username": username } } },
-        { arrayFilters: [{ "post._id": postId },] }
+        { username: postedBy },
+        { $addToSet: { "posts.$[post].likesArray": { username: username } } },
+        { arrayFilters: [{ "post._id": postId }] }
       )
       .then((result) => {
         console.log("liked post pushed");
@@ -123,24 +144,6 @@ router.post("/allposts/like/:username", auth, async (req, res) => {
       .catch((err) => console.log(err));
     res.status(200).json({ message: "Liked the post" });
   }
-});
-
-// UNLIKE THE POST
-
-router.patch("/allposts/unlike/:username", auth, async (req, res) => {
-  const username = req.params.username;
-  const postId = req.body.postId;
-
-  const thePost = await postSchema.findOneAndUpdate(
-    { _id: postId },
-    { $pull: { likesArray: { username: username } } }
-  );
-  // const theUser = await userSchema.findOne({username:postedBy,"likesArray.username":username});
-  thePost
-    .save()
-    .then((result) => console.log("Unliked the post"))
-    .catch((err) => console.log(err));
-  res.status(200).json({ message: "Unliked the post" });
 });
 
 export default router;

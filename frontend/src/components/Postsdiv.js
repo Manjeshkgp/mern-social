@@ -73,8 +73,8 @@ const Postsdiv = ({ allPostsState, scrollTo }) => {
               className=" w-[calc(100vw-4px)] h-full max-h-[calc(100vh_-_12rem)] object-cover"
             />
             <div className="flex items-center justify-around h-12 border-b border-[#262626]">
-              <div className="font-medium text-white">
-                {singlePost?.likesArray?.some(obj=>obj.username===username)?<p><LikedIcon/></p>:<p onClick={()=>{fetchLike(singlePost)}}><LikeIcon/></p>}
+              <div onClick={()=>{fetchLike(singlePost)}} className="font-medium text-white">
+                {singlePost?.likesArray?.some(obj=>obj.username===username)?<p><LikedIcon/></p>:<p><LikeIcon/></p>}
               </div>
               <p className="font-medium text-white">
                 <CommentIcon />
