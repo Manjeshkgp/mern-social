@@ -6,7 +6,7 @@ const userSchema = new Schema({
     password:{type:String,required:true},
     username:{type:String,required:true},
     profileImage:{contentType:String,imgUrl:String},
-    posts:[Object],
+    posts:[{description:String,contentType:String,postedBy:String,postedByProfileImage:String,imgUrl:String,likesArray:[Object],comments:[Object],postedAt:Date}],
     // followDetails:{},
 })
 

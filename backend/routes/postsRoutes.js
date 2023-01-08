@@ -1,50 +1,72 @@
 import { Router } from "express";
-import userSchema from "../models/User.js"
+import userSchema from "../models/User.js";
 import postSchema from "../models/Post.js";
 import passport from "passport";
 import multer from "multer";
 import fs from "fs";
+import mongoose from "mongoose";
 
 const router = Router();
-const auth = passport.authenticate("jwt",{session:false});
+const auth = passport.authenticate("jwt", { session: false });
 const storage = multer.diskStorage({
-    destination: (req, file, cb) => {
-      cb(null, "posts");
-    },
-    filename: (req, file, cb) => {
-      cb(null, file.originalname);
-    },
-  });
+  destination: (req, file, cb) => {
+    cb(null, "posts");
+  },
+  filename: (req, file, cb) => {
+    cb(null, file.originalname);
+  },
+});
 
-const upload = multer({storage:storage});
+const upload = multer({ storage: storage });
 
 // SEND POST
-router.post("/users/post/:id",auth,upload.single("postImage"),async (req, res) => {
-  const _id = req.params.id;
-  if (_id.length !== 24) {
-    res.status(406).json({ message: `${_id} is invalid` });
-    return;
-  }
-  const userExist = await userSchema.findOne({ _id: _id });
-  if (!userExist || userExist === null) {
-    res.status(403).json({ message: "User not found" });
-    console.log(userExist);
-    return;
-  }
-  const saveImage = await new postSchema({
-        description:req.body.description,
-        postedBy:userExist.username,
-        postedByProfileImage:userExist.profileImage.imgUrl?userExist.profileImage.imgUrl:"",
-        contentType: "image/png",
-        imgUrl:req.file.path, 
+router.post(
+  "/users/post/:id",
+  auth,
+  upload.single("postImage"),
+  async (req, res) => {
+    const _id = req.params.id;
+    if (_id.length !== 24) {
+      res.status(406).json({ message: `${_id} is invalid` });
+      return;
+    }
+    const userExist = await userSchema.findOne({ _id: _id });
+    if (!userExist || userExist === null) {
+      res.status(403).json({ message: "User not found" });
+      console.log(userExist);
+      return;
+    }
+    const saveImage = await new postSchema({
+      description: req.body.description,
+      postedBy: userExist.username,
+      postedByProfileImage: userExist.profileImage.imgUrl
+        ? userExist.profileImage.imgUrl
+        : "",
+      contentType: "image/png",
+      imgUrl: req.file.path,
+    });
+    saveImage
+      .save()
+      .then((result) => {
+        console.log("Image Saved Successfully");
+      })
+      .catch((err) => {
+        console.log(err);
       });
-  saveImage.save().then((result)=>{console.log("Image Saved Successfully")}).catch((err)=>{console.log(err)});
-  userExist.posts.push(saveImage)
-  userExist.save().then((result)=>{console.log("Post added to Posts")}).catch((err)=>{console.log(err)})
-  // console.log(userExist, _id.length);
-  res.json({message:"Image Saved Successfully" });
-  console.log(req.file.path)
-})
+    userExist.posts.push(saveImage);
+    userExist
+      .save()
+      .then((result) => {
+        console.log("Post added to Posts");
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+    // console.log(userExist, _id.length);
+    res.json({ message: "Image Saved Successfully" });
+    console.log(req.file.path);
+  }
+);
 
 // GET POSTS // not much useful cause another route is doing the bigger work including this
 
@@ -65,36 +87,60 @@ router.post("/users/post/:id",auth,upload.single("postImage"),async (req, res) =
 
 // GET POSTS FOR HOME PAGE
 
-router.get("/allposts/:id",auth,async(req,res)=>{
+router.get("/allposts/:id", auth, async (req, res) => {
   const _id = req.params.id;
   if (_id.length !== 24) {
     res.status(406).json({ message: `${_id} is invalid` });
     return;
   }
-  const allposts = await postSchema.find().sort({postedAt:-1});
-  res.json({allposts:allposts});
-})
+  const allposts = await postSchema.find().sort({ postedAt: -1 });
+  res.json({ allposts: allposts });
+});
 
 // LIKE A POST
 
-router.post("/allposts/like/:username",auth,async(req,res)=>{
+router.post("/allposts/like/:username", auth, async (req, res) => {
   const username = req.params.username;
-  const userProfileImage = req.body.userProfileImage;
   const postId = req.body.postId;
-  
-  const thePost = await postSchema.findOne({_id:postId});
-  await thePost.likesArray.push({username:username,userProfileImage:userProfileImage});
-  thePost.save().then((result)=>console.log("liked the post")).catch((err)=>console.log(err));
-  res.status(200).json({message:"Liked the post"})
-})
 
-router.patch("/allposts/unlike/:username",auth,async(req,res)=>{
+  const thePost = await postSchema.findOne({ _id: postId });
+  const postedBy = await thePost?.postedBy;
+  if (thePost.likesArray.some((obj) => obj.username === username)) {
+    res.json({ message: "Already Liked" });
+  } else {
+    await thePost.likesArray.push({ username: username });
+    await thePost.save();
+    console.log("thePost is liked");
+    await userSchema
+      .findOneAndUpdate(
+        { "username": postedBy },
+        { $addToSet: { "posts.$[post].likesArray": { "username": username } } },
+        { arrayFilters: [{ "post._id": postId },] }
+      )
+      .then((result) => {
+        console.log("liked post pushed");
+      })
+      .catch((err) => console.log(err));
+    res.status(200).json({ message: "Liked the post" });
+  }
+});
+
+// UNLIKE THE POST
+
+router.patch("/allposts/unlike/:username", auth, async (req, res) => {
   const username = req.params.username;
   const postId = req.body.postId;
-  
-  const thePost = await postSchema.findOneAndUpdate({_id:postId},{ $pull: { likesArray: { username:username } } });
-  thePost.save().then((result)=>console.log("Unliked the post")).catch((err)=>console.log(err));
-  res.status(200).json({message:"Unliked the post"})
-})
+
+  const thePost = await postSchema.findOneAndUpdate(
+    { _id: postId },
+    { $pull: { likesArray: { username: username } } }
+  );
+  // const theUser = await userSchema.findOne({username:postedBy,"likesArray.username":username});
+  thePost
+    .save()
+    .then((result) => console.log("Unliked the post"))
+    .catch((err) => console.log(err));
+  res.status(200).json({ message: "Unliked the post" });
+});
 
 export default router;

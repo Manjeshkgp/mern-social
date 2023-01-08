@@ -5,6 +5,7 @@ import Cookies from "js-cookie";
 
 const Postsdiv = ({ allPostsState, scrollTo }) => {
     const username = Cookies.get("username");
+    const token = Cookies.get("token");
   const descControl = (e) => {
     const classes = e.currentTarget.classList;
     if (classes.contains("customEllipsis")) {
@@ -27,6 +28,22 @@ const Postsdiv = ({ allPostsState, scrollTo }) => {
     executeScroll()
   },[scrollTo])
 
+  const fetchLike = async (e) => {
+    const requiredJson = JSON.stringify({postId:e._id})
+    const res = await fetch(`http://localhost:4000/allposts/like/${username}`,{
+        method:"POST",
+        headers:{
+            Authorization:`Bearer ${token}`,
+            "Content-Type":"application/json",
+        },
+        body:requiredJson,
+    })
+    const data = await res.json();
+    if(res.status===200){
+        console.log(data);
+    }
+  }
+
 //   allPostsState.map((singlePost)=>{console.log(singlePost.likesArray.some(obj=>obj.username===username))}) // returns true/false
 //   allPostsState.map((singlePost)=>{console.log(singlePost.likesArray.find(obj=>obj.username===username))}) // returns whole object/element or undefined when array doesn't have the desired string
   
@@ -36,7 +53,7 @@ const Postsdiv = ({ allPostsState, scrollTo }) => {
         <div
         id={singlePost._id}
           key={singlePost._id}
-          className="flex justify-center items-center my-4 border border-[#262626] rounded-lg"
+          className="flex justify-center items-center mb-12 border border-[#262626] rounded-lg first:mt-4"
         >
           <div className="bg-black flex flex-col rounded-lg">
             <div className="h-12 flex items-center justify-start">
@@ -56,9 +73,9 @@ const Postsdiv = ({ allPostsState, scrollTo }) => {
               className=" w-[calc(100vw-4px)] h-full max-h-[calc(100vh_-_12rem)] object-cover"
             />
             <div className="flex items-center justify-around h-12 border-b border-[#262626]">
-              <p className="font-medium text-white">
-                {singlePost.likesArray.some(obj=>obj.username===username)?<LikedIcon/>:<LikeIcon/>}
-              </p>
+              <div className="font-medium text-white">
+                {singlePost?.likesArray?.some(obj=>obj.username===username)?<p><LikedIcon/></p>:<p onClick={()=>{fetchLike(singlePost)}}><LikeIcon/></p>}
+              </div>
               <p className="font-medium text-white">
                 <CommentIcon />
               </p>
@@ -71,7 +88,7 @@ const Postsdiv = ({ allPostsState, scrollTo }) => {
             </div>
             <div className="flex items-start flex-col justify-around mb-1">
               <div className="ml-2 mr-2 font-semibold text-white">
-                {singlePost.likesArray.length} Likes
+                {singlePost.likesArray?.length || 0} Likes
               </div>
               <div className="ml-2 mr-2">
                 <p
