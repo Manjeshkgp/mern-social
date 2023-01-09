@@ -146,7 +146,7 @@ router.post("/allposts/like/:username", auth, async (req, res) => {
   }
 });
 
-// COMMENT AND UNCOMMENT ON A POST
+// COMMENT ON A POST
 
 router.post("/allposts/comment/:username", auth, async (req, res) => {
   const username = req.params.username;
@@ -154,6 +154,11 @@ router.post("/allposts/comment/:username", auth, async (req, res) => {
   const commentString = req.body.commentString;
   // const commentID = req.body.commentID;
 
+  if (postId.length !== 24) {
+    res.status(406).json({
+      message: `The ID of post you given is ${postId}, it is incorrect`,
+    });
+  }
   const thePost = await postSchema.findOne({ _id: postId });
   const postedBy = await thePost?.postedBy;
   // if (thePost.comments.some((obj) => obj.username === username && obj.commentID === commentID)) {
@@ -180,22 +185,57 @@ router.post("/allposts/comment/:username", auth, async (req, res) => {
   //     .catch((err) => console.log(err));
   //   res.status(209).json({ message: "Post unliked" });
   // } else {
-    await thePost.comments.push({ username: username, commentString:commentString, commentID:mongoose.Types.ObjectId() });
-    await thePost.save();
-    console.log("thePost is commented",thePost); // PROBLEM mongoose.Types.ObjectId() generating different Ids for both time check
-    const newCommentsArray = await thePost.comments;
-    await userSchema
-      .findOneAndUpdate(
-        { username: postedBy },
-        { $set: { "posts.$[post].comments": newCommentsArray } }, // used $addToSet instead of $pull since addToSet checks if already the element is available or not
-        { arrayFilters: [{ "post._id": postId }] }
-      )
-      .then((result) => {
-        console.log("commented post pushed",result);
-      })
-      .catch((err) => console.log(err));
-    res.status(200).json({ message: "commented the post" });
+  await thePost.comments.push({
+    username: username,
+    commentString: commentString,
+    commentID: mongoose.Types.ObjectId(),
+  });
+  await thePost.save();
+  console.log("thePost is commented", thePost); // PROBLEM mongoose.Types.ObjectId() generating different Ids for both time check
+  const newCommentsArray = await thePost.comments;
+  await userSchema
+    .findOneAndUpdate(
+      { username: postedBy },
+      { $set: { "posts.$[post].comments": newCommentsArray } },
+      { arrayFilters: [{ "post._id": postId }] }
+    )
+    .then((result) => {
+      console.log("commented post pushed", result);
+    })
+    .catch((err) => console.log(err));
+  res.status(200).json({ message: "commented the post" });
   // }
+});
+
+// DELETE A COMMENT FROM A POST
+
+router.delete("/allposts/comment/:username", auth, async (req, res) => {
+  // const username = req.params.username;
+  const postId = req.body.postId;
+  const commentID = req.body.commentID;
+
+  if (postId.length !== 24 || commentID.length !== 24) {
+    res.status(406).json({
+      message: `The ID of post you given is ${postId}, it is incorrect`,
+    });
+  }
+  const thePost = await postSchema.findOneAndUpdate(
+    { _id: postId },
+    { $pull: { comments: { commentID: mongoose.Types.ObjectId(commentID) } } }
+  );
+
+  const postedBy = await thePost?.postedBy;
+  await userSchema
+    .findOneAndUpdate(
+      { username: postedBy },
+      { $pull: { "posts.$[post].comments": {commentID: mongoose.Types.ObjectId(commentID)} } },
+      { arrayFilters: [{ "post._id": mongoose.Types.ObjectId(postId) }] }
+    )
+    .then((result) => {
+      console.log("deleted commented post pushed", result);
+    })
+    .catch((err) => console.log(err));
+  res.status(200).json({ message: "comment deleted" });
 });
 
 export default router;
