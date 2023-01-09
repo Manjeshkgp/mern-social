@@ -109,7 +109,7 @@ router.post("/allposts/like/:username", auth, async (req, res) => {
     await postSchema
       .findOneAndUpdate(
         { _id: postId },
-        { $pull: { likesArray: { username: username } } }
+        { $pull: { likesArray: { username: { $eq: username } } } }
       )
       .then((res) => console.log("unliked the post"))
       .catch((err) => console.log(err));
@@ -127,7 +127,7 @@ router.post("/allposts/like/:username", auth, async (req, res) => {
         console.log("unliked post pushed");
       })
       .catch((err) => console.log(err));
-    res.json({ message: "Post unliked" });
+    res.status(209).json({ message: "Post unliked" });
   } else {
     await thePost.likesArray.push({ username: username });
     await thePost.save();
@@ -135,7 +135,7 @@ router.post("/allposts/like/:username", auth, async (req, res) => {
     await userSchema
       .findOneAndUpdate(
         { username: postedBy },
-        { $addToSet: { "posts.$[post].likesArray": { username: username } } },
+        { $addToSet: { "posts.$[post].likesArray": { username: username } } }, // used $addToSet instead of $pull since addToSet checks if already the element is available or not
         { arrayFilters: [{ "post._id": postId }] }
       )
       .then((result) => {
@@ -144,6 +144,58 @@ router.post("/allposts/like/:username", auth, async (req, res) => {
       .catch((err) => console.log(err));
     res.status(200).json({ message: "Liked the post" });
   }
+});
+
+// COMMENT AND UNCOMMENT ON A POST
+
+router.post("/allposts/comment/:username", auth, async (req, res) => {
+  const username = req.params.username;
+  const postId = req.body.postId;
+  const commentString = req.body.commentString;
+  // const commentID = req.body.commentID;
+
+  const thePost = await postSchema.findOne({ _id: postId });
+  const postedBy = await thePost?.postedBy;
+  // if (thePost.comments.some((obj) => obj.username === username && obj.commentID === commentID)) {
+  //   await postSchema
+  //     .findOneAndUpdate(
+  //       { _id: postId },
+  //       { $pull: { comments: { commentID: { $eq: commentID } } } }
+  //     )
+  //     .then((res) => console.log("unliked the post"))
+  //     .catch((err) => console.log(err));
+  //   await userSchema
+  //     .findOneAndUpdate(
+  //       { username: postedBy },
+  //       {
+  //         $pull: {
+  //           "posts.$[post].comments": { commentID: { $eq: commentID } },
+  //         },
+  //       },
+  //       { arrayFilters: [{ "post._id": postId }] }
+  //     )
+  //     .then((result) => {
+  //       console.log("unliked post pushed");
+  //     })
+  //     .catch((err) => console.log(err));
+  //   res.status(209).json({ message: "Post unliked" });
+  // } else {
+    await thePost.comments.push({ username: username, commentString:commentString, commentID:mongoose.Types.ObjectId() });
+    await thePost.save();
+    console.log("thePost is commented",thePost); // PROBLEM mongoose.Types.ObjectId() generating different Ids for both time check
+    const newCommentsArray = await thePost.comments;
+    await userSchema
+      .findOneAndUpdate(
+        { username: postedBy },
+        { $set: { "posts.$[post].comments": newCommentsArray } }, // used $addToSet instead of $pull since addToSet checks if already the element is available or not
+        { arrayFilters: [{ "post._id": postId }] }
+      )
+      .then((result) => {
+        console.log("commented post pushed",result);
+      })
+      .catch((err) => console.log(err));
+    res.status(200).json({ message: "commented the post" });
+  // }
 });
 
 export default router;
