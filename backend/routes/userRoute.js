@@ -155,4 +155,21 @@ router.post("/user/follow/:username",passport.authenticate("jwt",{session:false}
     res.json({message:"follow details added"});
 })
 
+// UNFOLLOW ROUTE
+// pull from both following and followers
+
+router.post("/user/unfollow/:username",async(req,res)=>{
+  const followerUsername = req.body.myUsername;
+  const followingUsername = req.params.username;
+
+  const theFollower = await userSchema.findOneAndUpdate({username:followerUsername},
+    {$pull:{following:{username:followingUsername}}});
+  const theFollowing = await userSchema.findOneAndUpdate({username:followingUsername},
+    {$pull:{followers:{username:followerUsername}}});
+
+    console.log("follower",theFollower)
+    console.log("following",theFollowing)
+    res.json({message:"follow details updated"});
+})
+
 export default router;
