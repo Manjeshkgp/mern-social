@@ -7,7 +7,8 @@ const userSchema = new Schema({
     username:{type:String,required:true},
     profileImage:{contentType:String,imgUrl:String},
     posts:[{description:String,contentType:String,postedBy:String,postedByProfileImage:String,imgUrl:String,likesArray:[Object],comments:[Object],postedAt:Date}],
-    // followDetails:{},
+    followers:[Object],
+    following:[Object],
 })
 
 export default new mongoose.model("User",userSchema);

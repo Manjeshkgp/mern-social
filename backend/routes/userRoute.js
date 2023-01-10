@@ -136,4 +136,23 @@ router.post(
   }
 );
 
+// FOLLOW, FOLLOWING ROUTE
+// we have to update both users at single time, one get a push in followers array and another one will get a push in following array
+
+router.post("/user/follow/:username",passport.authenticate("jwt",{session:false}),async(req,res)=>{
+  const followerUsername = req.body.myUsername;
+  const followingUsername = req.params.username;
+
+  if(followerUsername === followingUsername){res.status(481).json({message:"don't try to follow yourself"});return;}
+
+  const theFollower = await userSchema.findOneAndUpdate({username:followerUsername},
+    {$addToSet:{following:{username:followingUsername}}});
+  const theFollowing = await userSchema.findOneAndUpdate({username:followingUsername},
+    {$addToSet:{followers:{username:followerUsername}}});
+
+    console.log("follower",theFollower)
+    console.log("following",theFollowing)
+    res.json({message:"follow details added"});
+})
+
 export default router;
