@@ -39,7 +39,7 @@ const router = createBrowserRouter([
         path: "/profile",
         element: (
           <CheckUser>
-            <Profile />
+            <Profile socket={socket}/>
           </CheckUser>
         ),
       },

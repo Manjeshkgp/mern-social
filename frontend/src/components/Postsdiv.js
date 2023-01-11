@@ -5,7 +5,7 @@ import Cookies from "js-cookie";
 
 const Postsdiv = ({ allPostsState, setAllPostsState ,scrollTo, socket }) => {
   socket.on("newArrayForHome",(newArrayForHome)=>{
-    console.log(newArrayForHome)
+    // console.log(newArrayForHome)
     setAllPostsState(newArrayForHome)
   })
   const username = Cookies.get("username");
@@ -80,12 +80,8 @@ const Postsdiv = ({ allPostsState, setAllPostsState ,scrollTo, socket }) => {
               className=" w-[calc(100vw-4px)] h-full max-h-[calc(100vh_-_12rem)] object-cover"
             />
             <div className="flex items-center justify-around h-12 border-b border-[#262626]">
-              {/* setAllPostsState can be usefull here with nested array reformation */}
-              {/* e.currentTarget.firstChild.classList.add("hidden");e.currentTarget.lastChild.classList.remove("hidden")
-                {<p className="hidden">Like or Unlike</p>} 
-                Started learning socket io, may be that would be helpful*/}
-              <div  onClick={()=>{fetchLike(singlePost);socket.emit("liked_image",{message:"image liked",socketId:socket.id,post_id:singlePost._id}) }} className="font-medium text-white">
-                {singlePost?.likesArray?.some(obj=>obj.username===username)?<p><LikedIcon/></p>:<p><LikeIcon/></p>}
+              <div onClick={()=>{fetchLike(singlePost)}} className="font-medium text-white">
+                {singlePost?.likesArray?.some(obj=>obj.username===username)?<p onClick={()=>{socket.emit("unlike_image",{socketId:socket.id,post_id:singlePost._id,userUsername:username})}}><LikedIcon/></p>:<p onClick={()=>{socket.emit("like_image",{socketId:socket.id,post_id:singlePost._id,userUsername:username})}} ><LikeIcon/></p>}
               </div>
               <p className="font-medium text-white">
                 <CommentIcon />

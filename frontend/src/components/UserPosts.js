@@ -31,7 +31,7 @@ export default function UserPosts({height,profileImage,posts,setShowPostsdiv,set
     window.document.body.style.overflowY = "auto";
   }
 
-  posts.map((singlePost)=>console.log(singlePost?.imgUrl))
+  // posts.map((singlePost)=>console.log(singlePost?.imgUrl))
   return (
     <>
       {isLongPress ? (

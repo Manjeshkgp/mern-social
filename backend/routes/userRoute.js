@@ -120,9 +120,9 @@ router.post(
 
 router.get("/users/:id",passport.authenticate("jwt",{session:false}),async(req,res)=>{
   const _id = req.params.id;
-  const {profileImage,posts,username,name} = await userSchema.findOne({_id:_id})
+  const {profileImage,posts,username,name,followers,following} = await userSchema.findOne({_id:_id})
   const image = profileImage.imgUrl
-  res.json({image,posts,username,name});
+  res.json({image,posts,username,name,followers,following});
 })
 
 // TESTING AUTHENTICATION

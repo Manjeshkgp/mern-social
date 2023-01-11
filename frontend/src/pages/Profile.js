@@ -5,7 +5,7 @@ import userProfileImage from "../assets/user.png";
 import Postsdiv from "../components/Postsdiv";
 import { LeftArrowIcon } from "../assets/Icons";
 
-const Profile = () => {
+const Profile = ({socket}) => {
   const [height, setHeight] = useState(0);
   const [scrollTo,setScrollTo] = useState(null)
   const [showPostsdiv, setShowPostsdiv] = useState(false);
@@ -15,6 +15,8 @@ const Profile = () => {
   const [posts, setPosts] = useState([]);
   const [username, setUsername] = useState("");
   const [profileName, setProfileName] = useState("");
+  const [followers,setFollowers] = useState(0);
+  const [following,setFollowing] = useState(0);
   const identification = Cookies.get("identification");
   const token = Cookies.get("token");
   const fetchProfile = async () => {
@@ -29,7 +31,10 @@ const Profile = () => {
     setPosts(profileData.posts);
     setUsername(profileData.username);
     setProfileName(profileData.name);
+    setFollowers(profileData.followers.length || 0);
+    setFollowing(profileData.following.length || 0);
     console.log(profileData.posts);
+    socket.emit("profile_Data",profileData.posts);
   };
   useEffect(() => {
     fetchProfile();
@@ -78,11 +83,11 @@ const Profile = () => {
                     <p className="font-medium">Posts</p>
                   </div>
                   <div className="md:flex mr-3">
-                    <p className="font-[650] md:mr-1">71.2M</p>
+                    <p className="font-[650] md:mr-1">{followers}</p>
                     <p className="font-medium">Followers</p>
                   </div>
                   <div className="md:flex mr-3">
-                    <p className="font-[650] md:mr-1">2K</p>
+                    <p className="font-[650] md:mr-1">{following}</p>
                     <p className="font-medium">Following</p>
                   </div>
                 </div>
@@ -159,7 +164,7 @@ const Profile = () => {
         ) : (<div>
           <div className="sticky top-0 h-12 w-full text-white text-xl font-semibold flex flex-row justify-between items-center bg-[#252525] rounded-b-md border-b border-x border-[#555555]"><p onClick={()=>{setShowPostsdiv(false)}} className="ml-2 cursor-pointer"><LeftArrowIcon/></p><p className="mr-2">Posts</p></div>
           <div className="sticky bottom-0 top-[calc(100vh-5rem)] w-full text-white text-xl font-semibold flex justify-end items-center"><div onClick={()=>{setShowPostsdiv(false)}} className="rounded-full bg-[#67d7ff52] h-8 w-8 grid place-items-center mr-2 mb-2 cursor-pointer"><LeftArrowIcon/></div></div>
-          <Postsdiv allPostsState={posts} setAllPostsState={setPosts} scrollTo={scrollTo} />
+          <Postsdiv allPostsState={posts} setAllPostsState={setPosts} scrollTo={scrollTo} socket={socket}/>
         </div>)}
       </div>
     </div>
