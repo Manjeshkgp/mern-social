@@ -159,7 +159,7 @@ const Profile = () => {
         ) : (<div>
           <div className="sticky top-0 h-12 w-full text-white text-xl font-semibold flex flex-row justify-between items-center bg-[#252525] rounded-b-md border-b border-x border-[#555555]"><p onClick={()=>{setShowPostsdiv(false)}} className="ml-2 cursor-pointer"><LeftArrowIcon/></p><p className="mr-2">Posts</p></div>
           <div className="sticky bottom-0 top-[calc(100vh-5rem)] w-full text-white text-xl font-semibold flex justify-end items-center"><div onClick={()=>{setShowPostsdiv(false)}} className="rounded-full bg-[#67d7ff52] h-8 w-8 grid place-items-center mr-2 mb-2 cursor-pointer"><LeftArrowIcon/></div></div>
-          <Postsdiv allPostsState={posts} scrollTo={scrollTo} />
+          <Postsdiv allPostsState={posts} setAllPostsState={setPosts} scrollTo={scrollTo} />
         </div>)}
       </div>
     </div>

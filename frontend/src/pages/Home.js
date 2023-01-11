@@ -3,7 +3,7 @@ import Cookies from "js-cookie";
 import { RightArrowIcon,LeftArrowIcon} from "../assets/Icons.js";
 import Postsdiv from "../components/Postsdiv.js";
 
-const Home = () => {
+const Home = ({socket}) => {
   const scrollRef = useRef(null);
   const [allPostsState,setAllPostsState] = useState([]);
   const scrollLeft = () => {
@@ -28,6 +28,7 @@ const Home = () => {
     const { allposts } = await res.json();
     if(res.status===200){
       setAllPostsState(allposts)
+      socket.emit("HomePagePosts",allposts)
     }
     // console.log(allPosts);
   };
@@ -51,7 +52,7 @@ const Home = () => {
           </div>
         </div>
         <div className="postsDiv">
-          <Postsdiv allPostsState={allPostsState} scrollTo={null}/>
+          <Postsdiv allPostsState={allPostsState} setAllPostsState={setAllPostsState} scrollTo={null} socket={socket}/>
         </div>
       </div>
       <div className="bg-green-200 hidden lg:block w-80">suggestions from IG to make friends</div>

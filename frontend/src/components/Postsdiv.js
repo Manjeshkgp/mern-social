@@ -3,8 +3,12 @@ import userProfileImage from "../assets/user.png";
 import { LikeIcon, CommentIcon, ShareIcon, SaveIcon, LikedIcon } from "../assets/Icons.js";
 import Cookies from "js-cookie";
 
-const Postsdiv = ({ allPostsState, scrollTo }) => {
-    const username = Cookies.get("username");
+const Postsdiv = ({ allPostsState, setAllPostsState ,scrollTo, socket }) => {
+  socket.on("newArrayForHome",(newArrayForHome)=>{
+    console.log(newArrayForHome)
+    setAllPostsState(newArrayForHome)
+  })
+  const username = Cookies.get("username");
     const token = Cookies.get("token");
   const descControl = (e) => {
     const classes = e.currentTarget.classList;
@@ -42,6 +46,9 @@ const Postsdiv = ({ allPostsState, scrollTo }) => {
     if(res.status===200){
         console.log(data);
     }
+    else if(res.status===209){
+      console.log(data);
+    }
   }
 
 //   allPostsState.map((singlePost)=>{console.log(singlePost.likesArray.some(obj=>obj.username===username))}) // returns true/false
@@ -73,7 +80,11 @@ const Postsdiv = ({ allPostsState, scrollTo }) => {
               className=" w-[calc(100vw-4px)] h-full max-h-[calc(100vh_-_12rem)] object-cover"
             />
             <div className="flex items-center justify-around h-12 border-b border-[#262626]">
-              <div onClick={()=>{fetchLike(singlePost)}} className="font-medium text-white">
+              {/* setAllPostsState can be usefull here with nested array reformation */}
+              {/* e.currentTarget.firstChild.classList.add("hidden");e.currentTarget.lastChild.classList.remove("hidden")
+                {<p className="hidden">Like or Unlike</p>} 
+                Started learning socket io, may be that would be helpful*/}
+              <div  onClick={()=>{fetchLike(singlePost);socket.emit("liked_image",{message:"image liked",socketId:socket.id,post_id:singlePost._id}) }} className="font-medium text-white">
                 {singlePost?.likesArray?.some(obj=>obj.username===username)?<p><LikedIcon/></p>:<p><LikeIcon/></p>}
               </div>
               <p className="font-medium text-white">

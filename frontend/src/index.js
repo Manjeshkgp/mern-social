@@ -13,6 +13,9 @@ import { Provider } from "react-redux";
 import store from "./store/store.js";
 import CheckUser from "./authentication/CheckUser";
 import UserIsAuthenticated from "./authentication/UserIsAuthenticated";
+import io from "socket.io-client";
+
+const socket = io.connect("http://localhost:4000")
 
 const router = createBrowserRouter([
   {
@@ -23,7 +26,7 @@ const router = createBrowserRouter([
         path: "/",
         element: (
           <CheckUser>
-            <Home />
+            <Home socket={socket}/>
           </CheckUser>
         ),
       },
