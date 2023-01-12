@@ -11,6 +11,8 @@ import path from "path";
 import { fileURLToPath } from "url";
 import http from "http";
 import { Server } from "socket.io";
+import HomePageSocket from "./sockets/HomePageSocket.js";
+import ProfilePageSocket from "./sockets/ProfilePageSocket.js";
 
 dotenv.config();
 const app = express();
@@ -33,68 +35,8 @@ io.on("connection", (socket) => {
     }
     // else the socket will automatically try to reconnect
   });
-  socket.on("HomePagePosts", (HomePagePosts) => {
-    socket.on("like_image", (likedPostData) => {
-      const updatedArray = HomePagePosts.map((singlePost) => {
-        if (singlePost._id === likedPostData.post_id) {
-            singlePost?.likesArray.push({ username: likedPostData.userUsername })
-          return {
-            ...singlePost,
-          };
-        } else {
-          return singlePost;
-        }
-      });
-      socket.emit("newArrayForHome",updatedArray)
-      HomePagePosts = updatedArray;
-    });
-    socket.on("unlike_image",(unlikedPostData)=>{
-      const updatedArray = HomePagePosts.map((singlePost) => {
-        if (singlePost._id === unlikedPostData.post_id) {
-            const newLikesArray = singlePost?.likesArray.filter(obj=>obj.username!==unlikedPostData.userUsername)
-          return {
-            ...singlePost,
-            likesArray:newLikesArray
-          };
-        } else {
-          return singlePost;
-        }
-      });
-      socket.emit("newArrayForHome",updatedArray)
-      HomePagePosts = updatedArray;
-    })
-  });
-  socket.on("profile_Data", (ProfileDataPosts) => {
-    socket.on("like_image", (likedPostData) => {
-      const updatedArray = ProfileDataPosts.map((singlePost) => {
-        if (singlePost._id === likedPostData.post_id) {
-            singlePost?.likesArray.push({ username: likedPostData.userUsername })
-          return {
-            ...singlePost,
-          };
-        } else {
-          return singlePost;
-        }
-      });
-      socket.emit("newArrayForHome",updatedArray)
-      ProfileDataPosts = updatedArray;
-    });
-    socket.on("unlike_image",(unlikedPostData)=>{
-      const updatedArray = ProfileDataPosts.map((singlePost) => {
-        if (singlePost._id === unlikedPostData.post_id) {
-            const newLikesArray = singlePost?.likesArray.filter(obj=>obj.username!==unlikedPostData.userUsername)
-          return {
-            ...singlePost,
-            likesArray:newLikesArray
-          };
-        } else {
-          return singlePost;
-        }
-      });
-      socket.emit("newArrayForHome",updatedArray)
-      ProfileDataPosts = updatedArray;
-    })
-  });
+  HomePageSocket(socket);
+  ProfilePageSocket(socket);
 });
 app.use(cors());
 app.use(bodyParser.urlencoded({ extended: false }));
