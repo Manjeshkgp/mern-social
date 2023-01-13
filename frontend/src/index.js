@@ -9,6 +9,7 @@ import Login from "./pages/Login";
 import SignUp from "./pages/SignUp";
 import Profile from "./pages/Profile";
 import EditProfile from "./pages/EditProfile";
+import Comments from "./pages/Comments";
 import ErrorPage from "./pages/ErrorPage";
 import { Provider } from "react-redux";
 import store from "./store/store.js";
@@ -52,10 +53,18 @@ const router = createBrowserRouter([
           </CheckUser>
         ),
       },
+      {
+        path:"/posts/:postId/comments",
+        element:(
+          <CheckUser>
+            <Comments />
+          </CheckUser>
+        ),
+      }
       // {
-      //   path: "/user/:username", // search user, edit profile with add photo, patch & delete request
+      //   path: "/user/:username", // search user, edit profile with add photo✅,patch & delete request
       //   element:(<Profile/>) // add & delete comment, show home posts properly according to friends list
-      // }, // messages page. all these functions should be added
+      // }, // messages page. all these functions should be added //⭐⭐Profile page desing having so many errors
     ],
   },
   {

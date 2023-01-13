@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 import userProfileImage from "../assets/user.png";
 import { LikeIcon, CommentIcon, ShareIcon, SaveIcon, LikedIcon } from "../assets/Icons.js";
 import Cookies from "js-cookie";
+import { Link } from "react-router-dom";
 
 const Postsdiv = ({ allPostsState, setAllPostsState ,scrollTo, socket }) => {
   socket.on("newArrayForHome",(newArrayForHome)=>{
@@ -18,9 +19,27 @@ const Postsdiv = ({ allPostsState, setAllPostsState ,scrollTo, socket }) => {
       classes.add("customEllipsis");
     }
   };
-  const postComment = (commentString) => {
-    // create backend route, then add code here
-    console.log(commentString);
+  const postComment = async (commentString,post_id) => {
+    if(commentString.length===0){
+      return
+    }
+    const bodyData = JSON.stringify({
+      postId:post_id,
+      username:username,
+      commentString:commentString
+    })
+    const res = await fetch(`http://localhost:4000/allposts/comment/${username}`,{
+      method:"POST",
+      headers:{
+        Authorization:`Bearer ${token}`,
+        "Content-Type":"application/json",
+      },
+      body:bodyData
+    });
+    const data = await res.json();
+    if(res.status===200){
+      console.log(data);
+    }
   };
   const executeScroll = () => {
     if (scrollTo != null) {
@@ -107,11 +126,11 @@ const Postsdiv = ({ allPostsState, setAllPostsState ,scrollTo, socket }) => {
                   {singlePost.description}
                 </p>
               </div>
-              <div className="ml-2 mr-2 text-gray-300 cursor-pointer">
+              <Link to={`/posts/${singlePost._id}/comments`} className="ml-2 mr-2 text-gray-300 cursor-pointer">
                 {singlePost.comments.length === 0
                   ? ""
                   : `View all ${singlePost.comments.length} comments`}
-              </div>
+              </Link>
               <div className="ml-2 mr-2 text-sm text-gray-300">
                 {singlePost.postedAt} 1 day ago
               </div>
@@ -124,7 +143,8 @@ const Postsdiv = ({ allPostsState, setAllPostsState ,scrollTo, socket }) => {
               ></textarea>
               <button
                 onClick={(e) => {
-                  postComment(e.currentTarget.previousElementSibling.value);
+                  postComment(e.currentTarget.previousElementSibling.value,singlePost._id);
+                  e.currentTarget.previousElementSibling.value=""
                 }}
                 className="text-white p-2"
               >
