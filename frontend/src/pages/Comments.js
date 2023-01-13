@@ -26,6 +26,24 @@ const Comments = () => {
   React.useEffect(() => {
     fetchComments();
   }, []);
+  const deleteComment = async (commentID) =>{
+    const bodyData = JSON.stringify({
+      postId:postId,
+      commentID:commentID,
+    });
+    const res = await fetch(`http://localhost:4000/allposts/comment/${myUsername}`,{
+      method:"DELETE",
+      headers:{
+        Authorization:`Bearer ${token}`,
+        "Content-Type":"application/json"
+      },
+      body:bodyData,
+    })
+    const response = await res.json();
+    if(res.status===200){
+      console.log(response)
+    }
+  }
   // console.log(commentsData)
   return (
     <>
@@ -35,7 +53,7 @@ const Comments = () => {
             <p className="text-left ml-1 text-gray-100 text-lg font-semibold cursor-pointer">
               {singleComment.username}
             </p>
-            {singleComment.username==myUsername?<p onClick={()=>{console.log(singleComment.commentID,"delete")}} className="mr-1 cursor-pointer">
+            {singleComment.username==myUsername?<p onClick={()=>{deleteComment(singleComment.commentID)}} className="mr-1 cursor-pointer">
               <CloseIcon />
             </p>:''}
           </div>
