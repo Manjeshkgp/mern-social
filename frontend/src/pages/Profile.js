@@ -4,6 +4,7 @@ import UserPosts from "../components/UserPosts";
 import userProfileImage from "../assets/user.png";
 import Postsdiv from "../components/Postsdiv";
 import { LeftArrowIcon } from "../assets/Icons";
+import { Link } from "react-router-dom";
 
 const Profile = ({socket}) => {
   const [height, setHeight] = useState(0);
@@ -15,6 +16,7 @@ const Profile = ({socket}) => {
   const [posts, setPosts] = useState([]);
   const [username, setUsername] = useState("");
   const [profileName, setProfileName] = useState("");
+  const [description,setDescription] = useState("");
   const [followers,setFollowers] = useState(0);
   const [following,setFollowing] = useState(0);
   const identification = Cookies.get("identification");
@@ -31,6 +33,7 @@ const Profile = ({socket}) => {
     setPosts(profileData.posts);
     setUsername(profileData.username);
     setProfileName(profileData.name);
+    setDescription(profileData.description);
     setFollowers(profileData.followers.length || 0);
     setFollowing(profileData.following.length || 0);
     console.log(profileData.posts);
@@ -96,15 +99,7 @@ const Profile = ({socket}) => {
                   className="flex flex-col justify-start col-span-6 md:col-span-4 md:row-span-1 mb-20 md:h-auto md:max-w-[613px] md:ml-0 md:mb-0 md:mt-20"
                 >
                   <p className="text-lg font-bold">{profileName}</p>
-                  <p className="text-md">
-                    Lorem ipsum dolor, sit amet consectetur adipisicing elit.
-                    Sit adipisci inventore amet dolores tenetur fuga magni,
-                    officiis quaerat quia quasi fugiat quo animi illo reiciendis
-                    mollitia qui eveniet enim veritatis exercitationem? Dolorum
-                    tempore exercitationem voluptatum libero repellat unde
-                    rerum, eligendi nostrum consequuntur alias, repudiandae
-                    corrupti id debitis quo quos tenetur.
-                  </p>
+                  <p className="text-md">{description}</p>
                 </div>
               </div>
               <div className="h-8 md:flex md:justify-start items-center md:h-12 md:absolute md:font-semibold md:text-lg md:mt-4 md:max-w-[613px]">
@@ -117,11 +112,10 @@ const Profile = ({socket}) => {
                   className="flex justify-evenly fixed bg-green-200 py-[0.75rem] w-[100vw] z-10 border-b border-black md:block md:py-0 md:z-0 md:w-auto md:static md:items-center md:flex-row md:justify-start md:max-w-[613px] md:ml-[28.8vw] lg:ml-[19rem] xl:ml-[19.5rem]"
                   // className="flex justify-evenly bg-green-200 py-[0.75rem] w-[100vw] z-10 border-b border-black absolute top-0" try this for mobile devices
                 >
-                  <button className="md:hidden">Back</button>
+                  <Link to="/" className="md:hidden">Back</Link>
                   <p className="md:text-2xl">{username}</p>{" "}
                   {/* not more than 17 characters design problems might occur */}
-                  <button className="md:hidden">Bell</button>
-                  <button className="md:hidden">:</button>
+                  <Link to="/edit-profile" className="md:hidden">edit Profile</Link>
                 </div>
                 <div className="grid grid-cols-9 -translate-y-4 md:translate-y-0 md:flex md:justify-end">
                   <button className="col-span-4 border border-transparent mx-1 rounded bg-gray-500 text-center md:ml-4 font-medium">

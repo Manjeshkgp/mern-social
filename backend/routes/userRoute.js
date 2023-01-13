@@ -86,8 +86,9 @@ router.post("/login", async (req, res) => {
 router.post(
   "/users/:id",
   passport.authenticate("jwt", { session: false }),
-  upload.single("userImage"),
+  upload.single("profileImage"),
   async (req, res) => {
+    const description = req.body.description;
     const _id = req.params.id;
     if (_id.length !== 24) {
       res.status(406).json({ message: `${_id} is invalid` });
@@ -107,12 +108,13 @@ router.post(
             contentType: "image/png",
             imgUrl:req.file.path,
           },
+          description:description,
         },
       }
     );
-    saveImage.save().then((result)=>{console.log("Image Saved Successfully")}).catch((err)=>{console.log(err)})
+    saveImage.save().then((result)=>{console.log("Image & description Saved Successfully")}).catch((err)=>{console.log(err)})
     // console.log(userExist, _id.length);
-    res.json({message:"Image Saved Successfully" });
+    res.json({message:"Image & Description Saved Successfully" });
   }
 );
 
@@ -120,9 +122,9 @@ router.post(
 
 router.get("/users/:id",passport.authenticate("jwt",{session:false}),async(req,res)=>{
   const _id = req.params.id;
-  const {profileImage,posts,username,name,followers,following} = await userSchema.findOne({_id:_id})
+  const {profileImage,posts,username,name,followers,following,description} = await userSchema.findOne({_id:_id})
   const image = profileImage.imgUrl
-  res.json({image,posts,username,name,followers,following});
+  res.json({image,posts,username,name,followers,following,description});
 })
 
 // TESTING AUTHENTICATION

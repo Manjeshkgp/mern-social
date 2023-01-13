@@ -8,6 +8,7 @@ import Home from "./pages/Home";
 import Login from "./pages/Login";
 import SignUp from "./pages/SignUp";
 import Profile from "./pages/Profile";
+import EditProfile from "./pages/EditProfile";
 import ErrorPage from "./pages/ErrorPage";
 import { Provider } from "react-redux";
 import store from "./store/store.js";
@@ -15,7 +16,7 @@ import CheckUser from "./authentication/CheckUser";
 import UserIsAuthenticated from "./authentication/UserIsAuthenticated";
 import io from "socket.io-client";
 
-const socket = io.connect("http://localhost:4000")
+const socket = io.connect("http://localhost:4000");
 
 const router = createBrowserRouter([
   {
@@ -26,7 +27,7 @@ const router = createBrowserRouter([
         path: "/",
         element: (
           <CheckUser>
-            <Home socket={socket}/>
+            <Home socket={socket} />
           </CheckUser>
         ),
       },
@@ -39,10 +40,22 @@ const router = createBrowserRouter([
         path: "/profile",
         element: (
           <CheckUser>
-            <Profile socket={socket}/>
+            <Profile socket={socket} />
           </CheckUser>
         ),
       },
+      {
+        path: "/edit-profile",
+        element: (
+          <CheckUser>
+            <EditProfile />
+          </CheckUser>
+        ),
+      },
+      // {
+      //   path: "/user/:username", // search user, edit profile with add photo, patch & delete request
+      //   element:(<Profile/>) // add & delete comment, show home posts properly according to friends list
+      // }, // messages page. all these functions should be added
     ],
   },
   {
