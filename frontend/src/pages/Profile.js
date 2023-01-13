@@ -55,15 +55,15 @@ const Profile = ({socket}) => {
             <div
               style={
                 tabSize
-                  ? { height: `${height + 8.875}rem` }
+                  ? { height: `${height + 8.875}rem`,minHeight:"15rem" }
                   : { height: `${height + 9.875}rem` }
               }
-              className={`bg-red-200 mt-12 grid overflow-hidden`}
+              className={`bg-red-200 mt-12 grid overflow-hidden md:w-[80vw] xl:w-[935px]`}
             >
               <div
                 style={
                   tabSize
-                    ? { height: `${height + 8.875}rem` }
+                    ? { height: `${height + 8.875}rem`,minHeight:"15rem" }
                     : { height: `${height + 8.875}rem` }
                 }
                 className={`grid grid-cols-6 md:content-center`}
@@ -96,20 +96,15 @@ const Profile = ({socket}) => {
                 </div>
                 <div
                   ref={elementRef}
-                  className="flex flex-col justify-start col-span-6 md:col-span-4 md:row-span-1 mb-20 md:h-auto md:max-w-[613px] md:ml-0 md:mb-0 md:mt-20"
+                  className="flex flex-col justify-start col-span-6 md:col-span-4 md:row-span-1 mb-20 md:h-auto md:max-w-[613px] md:ml-4 md:mb-0 md:mt-24 lg:ml-6 xl:ml-0"
                 >
                   <p className="text-lg font-bold">{profileName}</p>
-                  <p className="text-md">{description}</p>
+                  <p className="text-md min-h-[2rem] md:min-h-[initial]">{description}</p>
                 </div>
               </div>
               <div className="h-8 md:flex md:justify-start items-center md:h-12 md:absolute md:font-semibold md:text-lg md:mt-4 md:max-w-[613px]">
                 <div
-                  style={
-                    tabSize
-                      ? { marginTop: `${0}rem` }
-                      : { marginTop: `-${height + 11.875}rem` }
-                  }
-                  className="flex justify-evenly fixed bg-green-200 py-[0.75rem] w-[100vw] z-10 border-b border-black md:block md:py-0 md:z-0 md:w-auto md:static md:items-center md:flex-row md:justify-start md:max-w-[613px] md:ml-[28.8vw] lg:ml-[19rem] xl:ml-[19.5rem]"
+                  className="flex justify-evenly fixed bg-green-200 py-[0.75rem] w-[100vw] top-0 z-10 border-b border-black md:block md:py-0 md:z-0 md:w-auto md:static md:items-center md:flex-row md:justify-start md:max-w-[613px] md:ml-[28.8vw] lg:ml-[19rem] xl:ml-[19.5rem]"
                   // className="flex justify-evenly bg-green-200 py-[0.75rem] w-[100vw] z-10 border-b border-black absolute top-0" try this for mobile devices
                 >
                   <Link to="/" className="md:hidden">Back</Link>

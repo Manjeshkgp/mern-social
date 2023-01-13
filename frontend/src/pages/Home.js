@@ -50,7 +50,7 @@ const Home = ({socket}) => {
               Lorem_Ipsum
             </p>
           </div> */}
-          <p className="text-white w-full text-center text-2xl">Status Divs will be Added soon</p> 
+          <p className="text-white w-full text-center text-xl">Status Elements will be Added soon</p> 
         </div>
         <div className="postsDiv">
           <Postsdiv allPostsState={allPostsState} setAllPostsState={setAllPostsState} scrollTo={null} socket={socket}/>

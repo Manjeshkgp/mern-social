@@ -26,42 +26,60 @@ const Comments = () => {
   React.useEffect(() => {
     fetchComments();
   }, []);
-  const deleteComment = async (commentID) =>{
+  const deleteComment = async (commentID) => {
     const bodyData = JSON.stringify({
-      postId:postId,
-      commentID:commentID,
+      postId: postId,
+      commentID: commentID,
     });
-    const res = await fetch(`http://localhost:4000/allposts/comment/${myUsername}`,{
-      method:"DELETE",
-      headers:{
-        Authorization:`Bearer ${token}`,
-        "Content-Type":"application/json"
-      },
-      body:bodyData,
-    })
+    const res = await fetch(
+      `http://localhost:4000/allposts/comment/${myUsername}`,
+      {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        body: bodyData,
+      }
+    );
     const response = await res.json();
-    if(res.status===200){
-      console.log(response)
+    if (res.status === 200) {
+      console.log(response);
     }
-  }
+  };
   // console.log(commentsData)
   return (
     <>
       <div className="w-full bg-[#121212] flex flex-col justify-center items-center mb-8 md:ml-[72px] md:w-[calc(100%-72px)] md:mb-0 xl:ml-[220px] xl:w-[calc(100%-220px)]">
-        {commentsData.map((singleComment)=>(<div key={singleComment.commentID} className="bg-[#393939] w-[calc(100%-4rem)] m-4 rounded-md">
-          <div className="flex justify-between items-center m-1">
-            <p className="text-left ml-1 text-gray-100 text-lg font-semibold cursor-pointer">
-              {singleComment.username}
+        {commentsData.map((singleComment) => (
+          <div
+            key={singleComment.commentID}
+            className="bg-[#393939] w-[calc(100%-4rem)] m-4 rounded-md"
+          >
+            <div className="flex justify-between items-center m-1">
+              <p className="text-left ml-1 text-gray-100 text-lg font-semibold cursor-pointer">
+                {singleComment.username}
+              </p>
+              {singleComment.username === myUsername ? (
+                <p
+                  onClick={() => {
+                    if (window.confirm("Do you wanna delete this comment")) {
+                      deleteComment(singleComment.commentID);
+                    }
+                  }}
+                  className="mr-1 cursor-pointer"
+                >
+                  <CloseIcon />
+                </p>
+              ) : (
+                ""
+              )}
+            </div>
+            <p className="text-left m-1 text-gray-100 text-sm">
+              {singleComment.commentString}
             </p>
-            {singleComment.username==myUsername?<p onClick={()=>{deleteComment(singleComment.commentID)}} className="mr-1 cursor-pointer">
-              <CloseIcon />
-            </p>:''}
           </div>
-          <p className="text-left m-1 text-gray-100 text-sm">
-            {singleComment.commentString}
-          </p>
-        </div>))}
-        
+        ))}
       </div>
     </>
   );

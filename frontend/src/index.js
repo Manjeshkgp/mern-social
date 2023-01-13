@@ -60,10 +60,10 @@ const router = createBrowserRouter([
             <Comments />
           </CheckUser>
         ),
-      }
+      },
       // {
-      //   path: "/user/:username", // search user, edit profile with add photo✅,patch & delete request
-      //   element:(<Profile/>) // add & delete comment, show home posts properly according to friends list
+      //   path: "/user/:username", // search user, follow & unfollow, edit profile with add photo✅,patch & delete request
+      //   element:(<Profile/>) // add & delete comment✅, this isn't good (so ditch it) at small data: show home posts properly according to friends list
       // }, // messages page. all these functions should be added //⭐⭐Profile page desing having so many errors
     ],
   },

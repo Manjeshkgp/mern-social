@@ -118,7 +118,7 @@ router.post(
   }
 );
 
-// GET PROFILE IMAGE
+// GET PROFILE DATA
 
 router.get("/users/:id",passport.authenticate("jwt",{session:false}),async(req,res)=>{
   const _id = req.params.id;
@@ -172,6 +172,14 @@ router.post("/user/unfollow/:username",async(req,res)=>{
     console.log("follower",theFollower)
     console.log("following",theFollowing)
     res.json({message:"follow details updated"});
+});
+
+// SEARCH USERS REGEX
+
+router.get("/allusers/:username",passport.authenticate("jwt",{session:false}),async(req,res)=>{
+  const username = req.params.username;
+  const usersArray = await userSchema.find({"username":{$regex:username}}).limit(8)
+  res.json({usersArray:usersArray});
 })
 
 export default router;
