@@ -207,6 +207,15 @@ router.post("/allposts/comment/:username", auth, async (req, res) => {
   // }
 });
 
+// GET COMMENTS OF A POST
+
+router.get("/allposts/:postId/comments",auth,async(req,res)=>{
+  const postId = req.params.postId;
+  const thePost = await postSchema.findOne({_id:mongoose.Types.ObjectId(postId)});
+  const theComments = thePost?.comments;
+  res.json({data:theComments})
+})
+
 // DELETE A COMMENT FROM A POST
 
 router.delete("/allposts/comment/:username", auth, async (req, res) => {
