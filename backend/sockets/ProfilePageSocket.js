@@ -1,7 +1,7 @@
 const ProfilePageSocket = (socket) => {
   socket.on("profile_Data", (ProfileDataPosts) => {
     socket.on("like_image", (likedPostData) => {
-      const updatedArray = ProfileDataPosts.map((singlePost) => {
+      let updatedArray = ProfileDataPosts.map((singlePost) => {
         if (singlePost._id === likedPostData.post_id) {
           singlePost?.likesArray.push({ username: likedPostData.userUsername });
           return {
@@ -15,9 +15,9 @@ const ProfilePageSocket = (socket) => {
       ProfileDataPosts = updatedArray;
     });
     socket.on("unlike_image", (unlikedPostData) => {
-      const updatedArray = ProfileDataPosts.map((singlePost) => {
+      let updatedArray = ProfileDataPosts.map((singlePost) => {
         if (singlePost._id === unlikedPostData.post_id) {
-          const newLikesArray = singlePost?.likesArray.filter(
+          let newLikesArray = singlePost?.likesArray.filter(
             (obj) => obj.username !== unlikedPostData.userUsername
           );
           return {
@@ -32,6 +32,17 @@ const ProfilePageSocket = (socket) => {
       ProfileDataPosts = updatedArray;
     });
   });
+  socket.on("theirProfile_followers",(profileFollowers)=>{
+    socket.on("follow_theirProfile",(myUsername)=>{
+      profileFollowers.push({username:myUsername});
+      socket.emit("new_followers_Array",profileFollowers);
+    })
+    socket.on("unfollow_theirProfile",(myUsername)=>{
+      let updatedProfileFollowers = profileFollowers.filter((obj)=>obj.username!==myUsername);
+      profileFollowers = updatedProfileFollowers;
+      socket.emit("new_followers_Array",profileFollowers);
+    })
+  })
 };
 
 export default ProfilePageSocket;

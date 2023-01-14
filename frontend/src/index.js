@@ -71,7 +71,7 @@ const router = createBrowserRouter([
         ),
       },
       {
-        path: "/user/:theirusername", // search user✅, follow & unfollow, edit profile with add photo✅,patch & delete request
+        path: "/user/:theirusername", // search user✅, follow & unfollow✅,socket in follow & unfollow✅, edit profile with add photo✅,patch & delete request
         element:(<CheckUser>
           <Profile socket={socket}/>
         </CheckUser>) // add & delete comment✅, this isn't good (so ditch it) at small data: show home posts properly according to friends list

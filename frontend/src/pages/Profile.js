@@ -63,6 +63,7 @@ const Profile = ({ socket }) => {
     setFollowersArray(profileData?.followers || []);
     console.log(profileData.posts);
     socket.emit("profile_Data", profileData.posts);
+    socket.emit("theirProfile_followers",profileData.followers);
   };
   useEffect(() => {
     if (theirusername === undefined || theirusername === null) {
@@ -105,6 +106,10 @@ const Profile = ({ socket }) => {
       console.log(data)
     }
   }
+  socket.on("new_followers_Array",(new_followers_Array)=>{
+    setFollowers(new_followers_Array.length);
+    setFollowersArray(new_followers_Array);
+  })
   return (
     <div className="md:flex md:justify-center md:ml-[72px] xl:ml-[220px] bg-[#121212]">
       <div className="md:mx-5 md:max-w-[935px]">
@@ -198,11 +203,11 @@ const Profile = ({ socket }) => {
                     {followersArray.some(
                       (obj) => obj.username === Cookies.get("username")
                     ) ? (
-                      <button onClick={()=>{unFollowUser()}} className="col-span-4 border border-transparent mx-1 rounded bg-gray-500 text-center md:ml-4 font-medium">
+                      <button onClick={()=>{unFollowUser();socket.emit("unfollow_theirProfile",Cookies.get("username"))}} className="col-span-4 border border-transparent mx-1 rounded bg-gray-500 text-center md:ml-4 font-medium">
                         Following
                       </button>
                     ) : (
-                      <button onClick={()=>{followUser()}} className="col-span-4 border border-transparent mx-1 rounded bg-gray-500 text-center md:ml-4 font-medium">
+                      <button onClick={()=>{followUser();socket.emit("follow_theirProfile",Cookies.get("username"))}} className="col-span-4 border border-transparent mx-1 rounded bg-gray-500 text-center md:ml-4 font-medium">
                         Follow
                       </button>
                     )}
