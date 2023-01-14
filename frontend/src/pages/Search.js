@@ -22,7 +22,7 @@ const Search = () => {
   };
   return (
     <>
-      <div className="w-full md:w-[calc(100%-72px)] md:ml-[72px] xl:w-[calc(100%-220px)] xl:ml-[220px] bg-[#121212]">
+      <div className="w-full md:w-[calc(100%-72px)] md:ml-[72px] xl:w-[calc(100%-220px)] h-screen xl:ml-[220px] bg-[#121212]">
         <div className="flex justify-center items-center bg-black h-20 md:border-l md:border-yellow-100 md:rounded-b-md">
           <input
           type="text"

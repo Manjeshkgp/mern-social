@@ -1,6 +1,9 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+body{
+  background: #121212;
+}
 .customShadow{
     box-shadow: 0 0 100vh 50vh rgba(0, 0, 0, 0.466);
 }

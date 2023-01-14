@@ -57,7 +57,7 @@ const Home = ({ socket }) => {
   }, []);
 
   return (
-    <div className="flex flex-row mt-[45px] md:mt-4 justify-center md:ml-[72px] xl:ml-[220px] bg-[#121212]">
+    <div className="flex flex-row mt-[45px] md:mt-0 justify-center md:ml-[72px] xl:ml-[220px] bg-[#121212]">
       <div className="bg-[#121212] w-[100vw] md:w-[470px] lg:mr-8">
         {/* <button onClick={e=>scrollLeft()} className="hidden h-[86px] w-4 bg-yellow-300 opacity-40 md:grid place-items-center absolute"><LeftArrowIcon/></button> */}
         {/* <button onClick={e=>scrollRight()} className="hidden h-[86px] w-4 bg-yellow-300 opacity-40 md:grid place-items-center absolute ml-[calc(470px-1rem)]"><RightArrowIcon/></button> */}
