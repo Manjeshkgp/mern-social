@@ -134,9 +134,16 @@ const Profile = ({socket}) => {
                   <Link to="/" className="md:hidden">Back</Link>
                   <p className="md:text-2xl">{username}</p>{" "}
                   {/* not more than 17 characters design problems might occur */}
-                  <Link to="/edit-profile" style={theirusername===undefined || theirusername===null?"":{display:"none"}} className="md:hidden">edit Profile</Link>
+                  <Link to="/edit-profile" style={theirusername===undefined || theirusername===null?{}:{display:"none"}} className="md:hidden">edit Profile</Link>
                 </div>
-                <div className="grid grid-cols-9 -translate-y-4 md:translate-y-0 md:flex md:justify-end">
+                {theirusername===undefined || theirusername===null?<div className="grid grid-cols-8 -translate-y-4 md:translate-y-0 md:flex md:justify-end">
+                  <button className="col-span-4 border border-transparent mx-1 rounded bg-gray-500 text-center md:ml-4 font-medium xl:w-40">
+                    Edit Profile
+                  </button>
+                  <button className="col-span-4 border border-transparent mx-1 rounded bg-gray-500 text-center md:ml-4 font-medium xl:w-40">
+                    Delete Account
+                  </button>
+                </div>:<div className="grid grid-cols-9 -translate-y-4 md:translate-y-0 md:flex md:justify-end">
                   <button className="col-span-4 border border-transparent mx-1 rounded bg-gray-500 text-center md:ml-4 font-medium">
                     Follow
                   </button>
@@ -146,7 +153,8 @@ const Profile = ({socket}) => {
                   <button className="col-span-1 border border-transparent mx-1 rounded bg-gray-500 text-center font-medium md:hidden">
                     🤝
                   </button>
-                </div>
+                </div>}
+                
               </div>
             </div>
             {/*top-12,sticky & -weebkit-sticky helps to get position sticky after 3rem from the top of the screen like instagram*/}
