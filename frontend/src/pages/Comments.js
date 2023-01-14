@@ -2,6 +2,7 @@ import Cookies from "js-cookie";
 import React from "react";
 import { useParams } from "react-router-dom";
 import { CloseIcon } from "../assets/Icons";
+import ErrorPage from "./ErrorPage";
 
 const Comments = () => {
   const { postId } = useParams();
@@ -24,6 +25,9 @@ const Comments = () => {
     }
   };
   React.useEffect(() => {
+    if(postId.length!==24){
+      return;
+    }
     fetchComments();
   }, []);
   const deleteComment = async (commentID) => {
@@ -48,6 +52,11 @@ const Comments = () => {
     }
   };
   // console.log(commentsData)
+  if(postId.length!==24){
+    return(<>
+    <ErrorPage/>
+    </>)
+  }
   return (
     <>
       <div className="w-full bg-[#121212] flex flex-col justify-center items-center mb-8 md:ml-[72px] md:w-[calc(100%-72px)] md:mb-0 xl:ml-[220px] xl:w-[calc(100%-220px)]">

@@ -10,6 +10,7 @@ import SignUp from "./pages/SignUp";
 import Profile from "./pages/Profile";
 import EditProfile from "./pages/EditProfile";
 import Comments from "./pages/Comments";
+import Search from "./pages/Search";
 import ErrorPage from "./pages/ErrorPage";
 import { Provider } from "react-redux";
 import store from "./store/store.js";
@@ -54,10 +55,18 @@ const router = createBrowserRouter([
         ),
       },
       {
-        path:"/posts/:postId/comments",
-        element:(
+        path: "/posts/:postId/comments",
+        element: (
           <CheckUser>
             <Comments />
+          </CheckUser>
+        ),
+      },
+      {
+        path: "/search",
+        element: (
+          <CheckUser>
+            <Search />
           </CheckUser>
         ),
       },
