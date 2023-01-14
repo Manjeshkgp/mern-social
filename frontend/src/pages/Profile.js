@@ -4,7 +4,7 @@ import UserPosts from "../components/UserPosts";
 import userProfileImage from "../assets/user.png";
 import Postsdiv from "../components/Postsdiv";
 import { LeftArrowIcon } from "../assets/Icons";
-import { Link } from "react-router-dom";
+import { Link,useParams } from "react-router-dom";
 
 const Profile = ({socket}) => {
   const [height, setHeight] = useState(0);
@@ -19,6 +19,7 @@ const Profile = ({socket}) => {
   const [description,setDescription] = useState("");
   const [followers,setFollowers] = useState(0);
   const [following,setFollowing] = useState(0);
+  const {theirusername} = useParams();
   const identification = Cookies.get("identification");
   const token = Cookies.get("token");
   const fetchProfile = async () => {
@@ -39,8 +40,31 @@ const Profile = ({socket}) => {
     console.log(profileData.posts);
     socket.emit("profile_Data",profileData.posts);
   };
+  const fetchTheirProfile = async () => {
+    const res = await fetch(`http://localhost:4000/user/${theirusername}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        contentType: "image/png",
+      },
+    });
+    const profileData = await res.json();
+    setImage(profileData.image);
+    setPosts(profileData.posts);
+    setUsername(profileData.username);
+    setProfileName(profileData.name);
+    setDescription(profileData.description);
+    setFollowers(profileData.followers.length || 0);
+    setFollowing(profileData.following.length || 0);
+    console.log(profileData.posts);
+    socket.emit("profile_Data",profileData.posts);
+  };
   useEffect(() => {
+    if(theirusername===undefined || theirusername===null){
     fetchProfile();
+    }
+    else{
+    fetchTheirProfile();
+    }
     setHeight(elementRef.current.clientHeight / 16);
   }, []);
   const profileImage = `http://localhost:4000/${image}`;
@@ -110,7 +134,7 @@ const Profile = ({socket}) => {
                   <Link to="/" className="md:hidden">Back</Link>
                   <p className="md:text-2xl">{username}</p>{" "}
                   {/* not more than 17 characters design problems might occur */}
-                  <Link to="/edit-profile" className="md:hidden">edit Profile</Link>
+                  <Link to="/edit-profile" style={theirusername===undefined || theirusername===null?"":{display:"none"}} className="md:hidden">edit Profile</Link>
                 </div>
                 <div className="grid grid-cols-9 -translate-y-4 md:translate-y-0 md:flex md:justify-end">
                   <button className="col-span-4 border border-transparent mx-1 rounded bg-gray-500 text-center md:ml-4 font-medium">

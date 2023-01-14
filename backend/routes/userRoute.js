@@ -127,6 +127,15 @@ router.get("/users/:id",passport.authenticate("jwt",{session:false}),async(req,r
   res.json({image,posts,username,name,followers,following,description});
 })
 
+// GET PROFILE DATA BY USERNAME
+
+router.get("/user/:username",passport.authenticate("jwt",{session:false}),async(req,res)=>{
+  const theirUsername = req.params.username;
+  const {profileImage,posts,username,name,followers,following,description} = await userSchema.findOne({username:theirUsername})
+  const image = profileImage.imgUrl;
+  res.json({image,posts,username,name,followers,following,description});
+})
+
 // TESTING AUTHENTICATION
 
 router.post(

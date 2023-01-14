@@ -1,8 +1,10 @@
 import Cookies from "js-cookie";
 import React from "react";
+import { useNavigate } from "react-router-dom";
 import dummyUserImage from "../assets/user.png";
 
 const Search = () => {
+  const navigate = useNavigate();
   const token = Cookies.get("token");
   const [profileData, setProfileData] = React.useState([]);
   const fetchUsers = async (parameter) => {
@@ -22,7 +24,8 @@ const Search = () => {
     <>
       <div className="w-full md:w-[calc(100%-72px)] md:ml-[72px] xl:w-[calc(100%-220px)] xl:ml-[220px] bg-[#121212]">
         <div className="flex justify-center items-center bg-black h-20 md:border-l md:border-yellow-100 md:rounded-b-md">
-          <textarea
+          <input
+          type="text"
             placeholder="Search for your friends"
             rows="1"
             onChange={(e) => {
@@ -32,11 +35,11 @@ const Search = () => {
               fetchUsers(e.currentTarget.value);
             }}}
             className="resize-none w-[calc(100%-6rem)] pl-3 focus:outline-none caret-white bg-[#121212] text-white rounded-md h-8 text-lg"
-          ></textarea>
+          />
         </div>
         <div className="grid justify-center items-center bg-[#121212]">
           {profileData.map((singleUser) => (
-            <div key={singleUser._id} className="m-2 rounded-md flex bg-black">
+            <div key={singleUser._id} onClick={()=>{navigate(`/user/${singleUser.username}`)}} className="m-2 rounded-md flex bg-black">
               <div className="w-24 h-24 grid place-items-center">
                 <img
                   src={`http://localhost:4000/${singleUser?.profileImage?.imgUrl}`}
