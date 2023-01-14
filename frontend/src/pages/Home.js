@@ -1,18 +1,20 @@
-import React, { useEffect,useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Cookies from "js-cookie";
-import { RightArrowIcon,LeftArrowIcon} from "../assets/Icons.js";
+import { RightArrowIcon, LeftArrowIcon } from "../assets/Icons.js";
 import Postsdiv from "../components/Postsdiv.js";
+import dummyUserImage from "../assets/user.png";
 
-const Home = ({socket}) => {
+const Home = ({ socket }) => {
   // const scrollRef = useRef(null);
-  const [allPostsState,setAllPostsState] = useState([]);
+  const [allPostsState, setAllPostsState] = useState([]);
+  const [newlyJoinedUsers, setNewlyJoinedUsers] = useState([]);
   // const scrollLeft = () => {
   //   scrollRef.current.scrollLeft -= 200;
   // };
   // const scrollRight = () => {
   //   scrollRef.current.scrollLeft += 200;
   // };
-
+  const pcSize = window.matchMedia("(min-width: 1023px)").matches;
   const fetchAllposts = async () => {
     const token = Cookies.get("token");
     const identification = Cookies.get("identification");
@@ -26,16 +28,32 @@ const Home = ({socket}) => {
       }
     );
     const { allposts } = await res.json();
-    if(res.status===200){
-      setAllPostsState(allposts)
-      socket.emit("HomePagePosts",allposts)
+    if (res.status === 200) {
+      setAllPostsState(allposts);
+      socket.emit("HomePagePosts", allposts);
     }
     // console.log(allPosts);
   };
+
+  const fetchNewUsers = async () => {
+    const res = await fetch("http://localhost:4000/allusers", {
+      headers: {
+        Authorization: `Bearer ${Cookies.get("token")}`,
+        "Content-Type": "application/json",
+      },
+    });
+    const data = await res.json();
+    if (res.status === 200) {
+      setNewlyJoinedUsers(data.usersArray);
+      console.log(newlyJoinedUsers)
+    }
+  };
   // Remember that MongoDB allows only 100-crud-operations/second, so loading of post's user image is a big deal
   useEffect(() => {
-    // console.log("fetching");
-    fetchAllposts()
+    if (pcSize === true) {
+      fetchNewUsers();
+    }
+    fetchAllposts();
   }, []);
 
   return (
@@ -53,10 +71,35 @@ const Home = ({socket}) => {
           <p className="text-white w-full text-center text-xl">Status Elements will be Added soon</p> 
         </div> */}
         <div className="postsDiv">
-          <Postsdiv allPostsState={allPostsState} setAllPostsState={setAllPostsState} scrollTo={null} socket={socket}/>
+          <Postsdiv
+            allPostsState={allPostsState}
+            setAllPostsState={setAllPostsState}
+            scrollTo={null}
+            socket={socket}
+          />
         </div>
       </div>
-      <div className="bg-green-200 hidden lg:block w-80">suggestions from IG to make friends</div>
+      <div className="bg-[#121212] hidden w-80 lg:flex lg:flex-col mt-4 items-center">
+        <p className="text-white font-bold">Newly Joined on Imagegram</p>
+        {newlyJoinedUsers.map((singleUser) => (
+          <div key={singleUser._id} className="m-2 w-72 rounded-md flex bg-black">
+            <div className="w-20 h-20 grid place-items-center">
+              <img
+                src={`http://localhost:4000/${singleUser?.profileImage?.imgUrl}`}
+                onError={(e) => {
+                  e.currentTarget.src = `${dummyUserImage}`;
+                }}
+                alt=""
+                className="object-cover w-16 h-16 rounded-full border border-yellow-100"
+              />
+            </div>
+            <div className="h-20 grid content-center mx-1">
+              <p className="text-white font-bold">{singleUser.username}</p>
+              <p className="text-white font-medium">{singleUser.name}</p>
+            </div>
+          </div>
+        ))}
+      </div>
     </div>
   );
 };

@@ -10,6 +10,7 @@ const userSchema = new Schema({
     posts:[{description:String,contentType:String,postedBy:String,postedByProfileImage:String,imgUrl:String,likesArray:[Object],comments:[Object],postedAt:Date}],
     followers:[Object],
     following:[Object],
+    joinedOn:{type:Date,default:Date.now}
 })
 
 export default new mongoose.model("User",userSchema);

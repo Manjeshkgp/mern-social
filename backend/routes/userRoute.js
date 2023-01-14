@@ -191,4 +191,11 @@ router.get("/allusers/:username",passport.authenticate("jwt",{session:false}),as
   res.json({usersArray:usersArray});
 })
 
+// SEARCH USER WHO RECENTLY JOINED FOR HOME SUGGESTIONS
+
+router.get("/allusers",passport.authenticate("jwt",{session:false}),async(req,res)=>{
+  const usersArray = await userSchema.find().sort({joinedOn:-1}).limit(8)
+  res.json({usersArray:usersArray});
+})
+
 export default router;
