@@ -4,11 +4,12 @@ import UserPosts from "../components/UserPosts";
 import userProfileImage from "../assets/user.png";
 import Postsdiv from "../components/Postsdiv";
 import { LeftArrowIcon } from "../assets/Icons";
-import { Link,useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 
-const Profile = ({socket}) => {
+const Profile = ({ socket }) => {
+  const navigate = useNavigate();
   const [height, setHeight] = useState(0);
-  const [scrollTo,setScrollTo] = useState(null)
+  const [scrollTo, setScrollTo] = useState(null);
   const [showPostsdiv, setShowPostsdiv] = useState(false);
   const elementRef = useRef(null);
   const tabSize = window.matchMedia("(min-width: 767px)").matches;
@@ -16,10 +17,14 @@ const Profile = ({socket}) => {
   const [posts, setPosts] = useState([]);
   const [username, setUsername] = useState("");
   const [profileName, setProfileName] = useState("");
-  const [description,setDescription] = useState("");
-  const [followers,setFollowers] = useState(0);
-  const [following,setFollowing] = useState(0);
-  const {theirusername} = useParams();
+  const [description, setDescription] = useState("");
+  const [followers, setFollowers] = useState(0);
+  const [following, setFollowing] = useState(0);
+  const [followersArray, setFollowersArray] = useState([]);
+  const { theirusername } = useParams();
+  if (theirusername === Cookies.get("username")) {
+    navigate("/profile");
+  }
   const identification = Cookies.get("identification");
   const token = Cookies.get("token");
   const fetchProfile = async () => {
@@ -38,7 +43,7 @@ const Profile = ({socket}) => {
     setFollowers(profileData.followers.length || 0);
     setFollowing(profileData.following.length || 0);
     console.log(profileData.posts);
-    socket.emit("profile_Data",profileData.posts);
+    socket.emit("profile_Data", profileData.posts);
   };
   const fetchTheirProfile = async () => {
     const res = await fetch(`http://localhost:4000/user/${theirusername}`, {
@@ -55,22 +60,51 @@ const Profile = ({socket}) => {
     setDescription(profileData.description);
     setFollowers(profileData.followers.length || 0);
     setFollowing(profileData.following.length || 0);
+    setFollowersArray(profileData?.followers || []);
     console.log(profileData.posts);
-    socket.emit("profile_Data",profileData.posts);
+    socket.emit("profile_Data", profileData.posts);
   };
   useEffect(() => {
-    if(theirusername===undefined || theirusername===null){
-    fetchProfile();
-    }
-    else{
-    fetchTheirProfile();
+    if (theirusername === undefined || theirusername === null) {
+      fetchProfile();
+    } else {
+      fetchTheirProfile();
     }
     setHeight(elementRef.current.clientHeight / 16);
   }, []);
   const profileImage = `http://localhost:4000/${image}`;
-  // const base64String = image===[]?"":btoa(String.fromCharCode(...new Uint8Array(image)));
-  // <img loading='lazy' src={`data:image/png;base64,${base64String}`} alt=""/>
-  // everythin was fine just middleware loading causing some problem, see the browser console
+  const followUser = async () => {
+    const res = await fetch(`http://localhost:4000/user/follow/${username}`,{
+      method:"POST",
+      headers:{
+        Authorization:`Bearer ${token}`,
+        "Content-Type":"application/json"
+      },
+      body: JSON.stringify({
+        myUsername:Cookies.get("username")
+      })
+    })
+    const data = await res.json();
+    if(res.status === 200){
+      console.log(data)
+    }
+  }
+  const unFollowUser = async () => {
+    const res = await fetch(`http://localhost:4000/user/unfollow/${username}`,{
+      method:"POST",
+      headers:{
+        Authorization:`Bearer ${token}`,
+        "Content-Type":"application/json"
+      },
+      body: JSON.stringify({
+        myUsername:Cookies.get("username")
+      })
+    })
+    const data = await res.json();
+    if(res.status === 200){
+      console.log(data)
+    }
+  }
   return (
     <div className="md:flex md:justify-center md:ml-[72px] xl:ml-[220px] bg-[#121212]">
       <div className="md:mx-5 md:max-w-[935px]">
@@ -79,7 +113,7 @@ const Profile = ({socket}) => {
             <div
               style={
                 tabSize
-                  ? { height: `${height + 8.875}rem`,minHeight:"15rem" }
+                  ? { height: `${height + 8.875}rem`, minHeight: "15rem" }
                   : { height: `${height + 9.875}rem` }
               }
               className={`bg-red-200 mt-12 grid overflow-hidden md:w-[80vw] xl:w-[935px]`}
@@ -87,7 +121,7 @@ const Profile = ({socket}) => {
               <div
                 style={
                   tabSize
-                    ? { height: `${height + 8.875}rem`,minHeight:"15rem" }
+                    ? { height: `${height + 8.875}rem`, minHeight: "15rem" }
                     : { height: `${height + 8.875}rem` }
                 }
                 className={`grid grid-cols-6 md:content-center`}
@@ -123,38 +157,64 @@ const Profile = ({socket}) => {
                   className="flex flex-col justify-start col-span-6 md:col-span-4 md:row-span-1 mb-20 md:h-auto md:max-w-[613px] md:ml-4 md:mb-0 md:mt-24 lg:ml-6 xl:ml-0"
                 >
                   <p className="text-lg font-bold">{profileName}</p>
-                  <p className="text-md min-h-[2rem] md:min-h-[initial]">{description}</p>
+                  <p className="text-md min-h-[2rem] md:min-h-[initial]">
+                    {description}
+                  </p>
                 </div>
               </div>
               <div className="h-8 md:flex md:justify-start items-center md:h-12 md:absolute md:font-semibold md:text-lg md:mt-4 md:max-w-[613px]">
                 <div
-                  className="flex justify-evenly fixed bg-green-200 py-[0.75rem] w-[100vw] top-0 z-10 border-b border-black md:block md:py-0 md:z-0 md:w-auto md:static md:items-center md:flex-row md:justify-start md:max-w-[613px] md:ml-[28.8vw] lg:ml-[19rem] xl:ml-[19.5rem]"
+                  className="flex justify-evenly fixed bg-green-200 py-[0.75rem] w-[100vw] top-0 z-10 border-b border-black md:border-none md:block md:py-0 md:z-0 md:w-auto md:static md:items-center md:flex-row md:justify-start md:max-w-[613px] md:ml-[28.8vw] lg:ml-[19rem] xl:ml-[19.5rem]"
                   // className="flex justify-evenly bg-green-200 py-[0.75rem] w-[100vw] z-10 border-b border-black absolute top-0" try this for mobile devices
                 >
-                  <Link to="/" className="md:hidden">Back</Link>
+                  <Link to="/" className="md:hidden">
+                    Back
+                  </Link>
                   <p className="md:text-2xl">{username}</p>{" "}
                   {/* not more than 17 characters design problems might occur */}
-                  <Link to="/edit-profile" style={theirusername===undefined || theirusername===null?{}:{display:"none"}} className="md:hidden">edit Profile</Link>
+                  <Link
+                    to="/edit-profile"
+                    style={
+                      theirusername === undefined || theirusername === null
+                        ? {}
+                        : { display: "none" }
+                    }
+                    className="md:hidden"
+                  >
+                    edit Profile
+                  </Link>
                 </div>
-                {theirusername===undefined || theirusername===null?<div className="grid grid-cols-8 -translate-y-4 md:translate-y-0 md:flex md:justify-end">
-                  <button className="col-span-4 border border-transparent mx-1 rounded bg-gray-500 text-center md:ml-4 font-medium xl:w-40">
-                    Edit Profile
-                  </button>
-                  <button className="col-span-4 border border-transparent mx-1 rounded bg-gray-500 text-center md:ml-4 font-medium xl:w-40">
-                    Delete Account
-                  </button>
-                </div>:<div className="grid grid-cols-9 -translate-y-4 md:translate-y-0 md:flex md:justify-end">
-                  <button className="col-span-4 border border-transparent mx-1 rounded bg-gray-500 text-center md:ml-4 font-medium">
-                    Follow
-                  </button>
-                  <button className="col-span-4 border border-transparent mx-1 rounded bg-gray-500 text-center md:ml-4 font-medium">
-                    Message
-                  </button>
-                  <button className="col-span-1 border border-transparent mx-1 rounded bg-gray-500 text-center font-medium md:hidden">
-                    🤝
-                  </button>
-                </div>}
-                
+                {theirusername === undefined || theirusername === null ? (
+                  <div className="grid grid-cols-8 -translate-y-4 md:translate-y-0 md:flex md:justify-end">
+                    <button className="col-span-4 border border-transparent mx-1 rounded bg-gray-500 text-center md:ml-4 font-medium xl:w-40">
+                      Edit Profile
+                    </button>
+                    <button className="col-span-4 border border-transparent mx-1 rounded bg-gray-500 text-center md:ml-4 font-medium xl:w-40">
+                      Delete Account
+                    </button>
+                  </div>
+                ) : (
+                  <div className="grid grid-cols-9 -translate-y-4 md:translate-y-0 md:flex md:justify-end">
+                    {followersArray.some(
+                      (obj) => obj.username === Cookies.get("username")
+                    ) ? (
+                      <button onClick={()=>{unFollowUser()}} className="col-span-4 border border-transparent mx-1 rounded bg-gray-500 text-center md:ml-4 font-medium">
+                        Following
+                      </button>
+                    ) : (
+                      <button onClick={()=>{followUser()}} className="col-span-4 border border-transparent mx-1 rounded bg-gray-500 text-center md:ml-4 font-medium">
+                        Follow
+                      </button>
+                    )}
+
+                    <button className="col-span-4 border border-transparent mx-1 rounded bg-gray-500 text-center md:ml-4 font-medium">
+                      Message
+                    </button>
+                    <button className="col-span-1 border border-transparent mx-1 rounded bg-gray-500 text-center font-medium md:hidden">
+                      🤝
+                    </button>
+                  </div>
+                )}
               </div>
             </div>
             {/*top-12,sticky & -weebkit-sticky helps to get position sticky after 3rem from the top of the screen like instagram*/}
@@ -182,11 +242,37 @@ const Profile = ({socket}) => {
               />
             </div>
           </>
-        ) : (<div>
-          <div className="sticky top-0 h-12 w-full text-white text-xl font-semibold flex flex-row justify-between items-center bg-[#252525] rounded-b-md border-b border-x border-[#555555]"><p onClick={()=>{setShowPostsdiv(false)}} className="ml-2 cursor-pointer"><LeftArrowIcon/></p><p className="mr-2">Posts</p></div>
-          <div className="sticky bottom-0 top-[calc(100vh-5rem)] w-full text-white text-xl font-semibold flex justify-end items-center"><div onClick={()=>{setShowPostsdiv(false)}} className="rounded-full bg-[#67d7ff52] h-8 w-8 grid place-items-center mr-2 mb-2 cursor-pointer"><LeftArrowIcon/></div></div>
-          <Postsdiv allPostsState={posts} setAllPostsState={setPosts} scrollTo={scrollTo} socket={socket}/>
-        </div>)}
+        ) : (
+          <div>
+            <div className="sticky top-0 h-12 w-full text-white text-xl font-semibold flex flex-row justify-between items-center bg-[#252525] rounded-b-md border-b border-x border-[#555555]">
+              <p
+                onClick={() => {
+                  setShowPostsdiv(false);
+                }}
+                className="ml-2 cursor-pointer"
+              >
+                <LeftArrowIcon />
+              </p>
+              <p className="mr-2">Posts</p>
+            </div>
+            <div className="sticky bottom-0 top-[calc(100vh-5rem)] w-full text-white text-xl font-semibold flex justify-end items-center">
+              <div
+                onClick={() => {
+                  setShowPostsdiv(false);
+                }}
+                className="rounded-full bg-[#67d7ff52] h-8 w-8 grid place-items-center mr-2 mb-2 cursor-pointer"
+              >
+                <LeftArrowIcon />
+              </div>
+            </div>
+            <Postsdiv
+              allPostsState={posts}
+              setAllPostsState={setPosts}
+              scrollTo={scrollTo}
+              socket={socket}
+            />
+          </div>
+        )}
       </div>
     </div>
   );

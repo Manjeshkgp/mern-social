@@ -2,9 +2,10 @@ import React, { useEffect } from "react";
 import userProfileImage from "../assets/user.png";
 import { LikeIcon, CommentIcon, ShareIcon, SaveIcon, LikedIcon } from "../assets/Icons.js";
 import Cookies from "js-cookie";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const Postsdiv = ({ allPostsState, setAllPostsState ,scrollTo, socket }) => {
+  const navigate = useNavigate()
   socket.on("newArrayForHome",(newArrayForHome)=>{
     // console.log(newArrayForHome)
     setAllPostsState(newArrayForHome)
@@ -82,7 +83,7 @@ const Postsdiv = ({ allPostsState, setAllPostsState ,scrollTo, socket }) => {
           className="flex justify-center items-center mb-12 border border-[#262626] rounded-lg first:mt-4"
         >
           <div className="bg-black flex flex-col rounded-lg">
-            <div className="h-12 flex items-center justify-start">
+            <div onClick={()=>{navigate(`/user/${singlePost.postedBy}`)}} className="h-12 flex items-center justify-start">
               <img
                 src={`http://localhost:4000/${singlePost.postedByProfileImage}`}
                 alt=""
