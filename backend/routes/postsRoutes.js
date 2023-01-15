@@ -87,13 +87,15 @@ router.post(
 
 // GET POSTS FOR HOME PAGE
 
-router.get("/allposts/:id", auth, async (req, res) => {
-  const _id = req.params.id;
-  if (_id.length !== 24) {
-    res.status(406).json({ message: `${_id} is invalid` });
-    return;
-  }
-  const allposts = await postSchema.find().sort({ postedAt: -1 });
+router.get("/allposts", auth, async (req, res) => {
+  const page = req.query.page || 0;
+  const postsPerPage = 20;
+  // const _id = req.params.id;
+  // if (_id.length !== 24) {
+  //   res.status(406).json({ message: `${_id} is invalid` });
+  //   return;
+  // }
+  const allposts = await postSchema.find().sort({ postedAt: -1 }).skip(page*postsPerPage).limit(postsPerPage);
   res.json({ allposts: allposts });
 });
 
@@ -209,12 +211,14 @@ router.post("/allposts/comment/:username", auth, async (req, res) => {
 
 // GET COMMENTS OF A POST
 
-router.get("/allposts/:postId/comments",auth,async(req,res)=>{
+router.get("/allposts/:postId/comments", auth, async (req, res) => {
   const postId = req.params.postId;
-  const thePost = await postSchema.findOne({_id:mongoose.Types.ObjectId(postId)});
+  const thePost = await postSchema.findOne({
+    _id: mongoose.Types.ObjectId(postId),
+  });
   const theComments = thePost?.comments;
-  res.json({data:theComments})
-})
+  res.json({ data: theComments });
+});
 
 // DELETE A COMMENT FROM A POST
 
@@ -237,7 +241,13 @@ router.delete("/allposts/comment/:username", auth, async (req, res) => {
   await userSchema
     .findOneAndUpdate(
       { username: postedBy },
-      { $pull: { "posts.$[post].comments": {commentID: mongoose.Types.ObjectId(commentID)} } },
+      {
+        $pull: {
+          "posts.$[post].comments": {
+            commentID: mongoose.Types.ObjectId(commentID),
+          },
+        },
+      },
       { arrayFilters: [{ "post._id": mongoose.Types.ObjectId(postId) }] }
     )
     .then((result) => {

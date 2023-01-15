@@ -8,6 +8,7 @@ const Home = ({ socket }) => {
   // const scrollRef = useRef(null);
   const [allPostsState, setAllPostsState] = useState([]);
   const [newlyJoinedUsers, setNewlyJoinedUsers] = useState([]);
+  const [page,setPage] = useState(0);
   // const scrollLeft = () => {
   //   scrollRef.current.scrollLeft -= 200;
   // };
@@ -15,11 +16,27 @@ const Home = ({ socket }) => {
   //   scrollRef.current.scrollLeft += 200;
   // };
   const pcSize = window.matchMedia("(min-width: 1023px)").matches;
+  const handelInfiniteScroll = async () => {
+    // console.log("scrollHeight" + document.documentElement.scrollHeight);
+    // console.log("innerHeight" + window.innerHeight);
+    // console.log("scrollTop" + document.documentElement.scrollTop);
+    try {
+      if (
+        window.innerHeight + document.documentElement.scrollTop + 10 >=
+        document.documentElement.scrollHeight
+      ) {
+        // setLoading(true);
+        setPage((prev) => prev + 1);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
   const fetchAllposts = async () => {
     const token = Cookies.get("token");
     const identification = Cookies.get("identification");
     const res = await fetch(
-      `http://localhost:4000/allposts/${identification}`,
+      `http://localhost:4000/allposts?page=${page}`,
       {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -28,11 +45,14 @@ const Home = ({ socket }) => {
       }
     );
     const { allposts } = await res.json();
-    if (res.status === 200) {
-      setAllPostsState(allposts);
-      socket.emit("HomePagePosts", allposts);
+    if(allposts.length === 0){
+      return;
     }
-    // console.log(allPosts);
+    else if (res.status === 200) {
+      socket.emit("HomePagePosts", [...allPostsState,...allposts]);
+      setAllPostsState((prev)=>[...prev,...allposts]);
+    }
+    console.log(allposts);
   };
 
   const fetchNewUsers = async () => {
@@ -53,8 +73,10 @@ const Home = ({ socket }) => {
     if (pcSize === true) {
       fetchNewUsers();
     }
-    fetchAllposts();
+    window.addEventListener("scroll", handelInfiniteScroll);
+    return () => window.removeEventListener("scroll", handelInfiniteScroll);
   }, []);
+  useEffect(()=>{fetchAllposts()},[page])
 
   return (
     <div className="flex flex-row mt-[45px] md:mt-0 justify-center md:ml-[72px] xl:ml-[220px] bg-[#121212]">

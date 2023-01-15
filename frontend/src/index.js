@@ -70,7 +70,7 @@ const router = createBrowserRouter([
           </CheckUser>
         ),
       },
-      {
+      { //⭐⭐ test homePage with limit fetching and page skipping✅
         path: "/user/:theirusername", // search user✅, follow & unfollow✅,socket in follow & unfollow✅, edit profile with add photo✅,patch & delete request
         element:(<CheckUser>
           <Profile socket={socket}/>
