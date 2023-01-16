@@ -13,6 +13,7 @@ import http from "http";
 import { Server } from "socket.io";
 import HomePageSocket from "./sockets/HomePageSocket.js";
 import ProfilePageSocket from "./sockets/ProfilePageSocket.js";
+import chatRoute from "./routes/chatRoute.js"
 
 dotenv.config();
 const app = express();
@@ -51,6 +52,7 @@ app.get("/", (req, res) => {
 
 app.use("/", userRoute);
 app.use("/", postsRoute);
+app.use("/chat",chatRoute);
 
 app.use(passport.initialize());
 passportConfig(passport);
