@@ -173,7 +173,7 @@ const Profile = ({ socket }) => {
                   // className="flex justify-evenly bg-green-200 py-[0.75rem] w-[100vw] z-10 border-b border-black absolute top-0" try this for mobile devices
                 >
                   <Link to="/" className="md:hidden">
-                    Back
+                    <LeftArrowIcon/>
                   </Link>
                   <p className="md:text-2xl">{username}</p>{" "}
                   {/* not more than 17 characters design problems might occur */}
@@ -191,7 +191,7 @@ const Profile = ({ socket }) => {
                 </div>
                 {theirusername === undefined || theirusername === null ? (
                   <div className="grid grid-cols-8 -translate-y-4 md:translate-y-0 md:flex md:justify-end">
-                    <button className="col-span-4 border border-transparent mx-1 rounded bg-gray-500 text-center md:ml-4 font-medium xl:w-40">
+                    <button onClick={()=>{navigate("/edit-profile")}} className="col-span-4 border border-transparent mx-1 rounded bg-gray-500 text-center md:ml-4 font-medium xl:w-40">
                       Edit Profile
                     </button>
                     <button className="col-span-4 border border-transparent mx-1 rounded bg-gray-500 text-center md:ml-4 font-medium xl:w-40">
@@ -223,7 +223,7 @@ const Profile = ({ socket }) => {
               </div>
             </div>
             {/*top-12,sticky & -weebkit-sticky helps to get position sticky after 3rem from the top of the screen like instagram*/}
-            <div
+            {/* <div
               style={{ position: "-webkit-sticky" }}
               className="flex justify-around md:px-44 border-black border-b sticky h-8 top-12 bg-yellow-300 md:border-t md:border-b-0 md:static"
             >
@@ -236,7 +236,7 @@ const Profile = ({ socket }) => {
               <button className="focus:border-b-2 focus:border-black focus:mb-0 w-full mb-[2px] md:focus:border-t-2 md:focus:border-b-0">
                 Tags
               </button>
-            </div>
+            </div> */}
             <div className="flex justify-start items-center flex-row flex-wrap md:justify-around md:gap-4 md:mt-4 margin-break:mx-2 mb-12">
               <UserPosts
                 height={height}

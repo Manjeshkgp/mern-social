@@ -11,6 +11,8 @@ import Profile from "./pages/Profile";
 import EditProfile from "./pages/EditProfile";
 import Comments from "./pages/Comments";
 import Search from "./pages/Search";
+import Messages from "./pages/Messages";
+import Chat from "./pages/Chat";
 import ErrorPage from "./pages/ErrorPage";
 import { Provider } from "react-redux";
 import store from "./store/store.js";
@@ -76,6 +78,18 @@ const router = createBrowserRouter([
           <Profile socket={socket}/>
         </CheckUser>) // add & delete comment✅, this isn't good (so ditch it) at small data: show home posts properly according to friends list
       }, // messages page. all these functions should be added //⭐⭐Profile page desing having so many errors
+      {
+        path:"/messages",
+        element:(<CheckUser>
+          <Messages/>
+        </CheckUser>)
+      },
+      {
+        path:"/messages/:anotherUserId",
+        element:(<CheckUser>
+          <Chat/>
+        </CheckUser>)
+      }
     ],
   },
   {

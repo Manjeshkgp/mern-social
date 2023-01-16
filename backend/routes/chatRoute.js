@@ -31,11 +31,11 @@ router.get("/:userId",async(req,res)=>{
 });
 
 // FIND CHAT
-router.post("/find/:firstId/:secondId",async(req,res)=>{
+router.get("/find/:firstId/:secondId",async(req,res)=>{
     const firstId = req.params.firstId;
     const secondId = req.params.secondId;
     try {
-        const chat = ChatSchema.findOne({
+        const chat = await ChatSchema.findOne({
             members:{$all:[firstId,secondId]}
         })
         res.status(200).json(chat);
