@@ -9,6 +9,7 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 const Profile = ({ socket }) => {
   const navigate = useNavigate();
   const [height, setHeight] = useState(0);
+  const [theirProfileId,setTheirProfileId] = useState("");
   const [scrollTo, setScrollTo] = useState(null);
   const [showPostsdiv, setShowPostsdiv] = useState(false);
   const elementRef = useRef(null);
@@ -61,6 +62,7 @@ const Profile = ({ socket }) => {
     setFollowers(profileData.followers.length || 0);
     setFollowing(profileData.following.length || 0);
     setFollowersArray(profileData?.followers || []);
+    setTheirProfileId(profileData?._id);
     console.log(profileData.posts);
     socket.emit("profile_Data", profileData.posts);
     socket.emit("theirProfile_followers",profileData.followers);
@@ -212,7 +214,7 @@ const Profile = ({ socket }) => {
                       </button>
                     )}
 
-                    <button className="col-span-4 border border-transparent mx-1 rounded bg-gray-500 text-center md:ml-4 font-medium">
+                    <button onClick={()=>{navigate(`/messages/${theirProfileId}`)}} className="col-span-4 border border-transparent mx-1 rounded bg-gray-500 text-center md:ml-4 font-medium">
                       Message
                     </button>
                     <button className="col-span-1 border border-transparent mx-1 rounded bg-gray-500 text-center font-medium md:hidden">

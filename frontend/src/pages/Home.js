@@ -1,10 +1,11 @@
 import React, { useEffect, useRef, useState } from "react";
 import Cookies from "js-cookie";
-import { RightArrowIcon, LeftArrowIcon } from "../assets/Icons.js";
 import Postsdiv from "../components/Postsdiv.js";
 import dummyUserImage from "../assets/user.png";
+import { useNavigate } from "react-router-dom";
 
 const Home = ({ socket }) => {
+  const navigate = useNavigate();
   // const scrollRef = useRef(null);
   const [allPostsState, setAllPostsState] = useState([]);
   const [newlyJoinedUsers, setNewlyJoinedUsers] = useState([]);
@@ -104,7 +105,7 @@ const Home = ({ socket }) => {
       <div className="bg-[#121212] hidden w-80 lg:flex lg:flex-col mt-4 items-center">
         <p className="text-white font-bold">Newly Joined on Imagegram</p>
         {newlyJoinedUsers.map((singleUser) => (
-          <div key={singleUser._id} className="m-2 w-72 rounded-md flex bg-black">
+          <div key={singleUser._id} onClick={()=>{navigate(`/user/${singleUser.username}`)}} className="m-2 w-72 rounded-md flex bg-black">
             <div className="w-20 h-20 grid place-items-center">
               <img
                 src={`http://localhost:4000/${singleUser?.profileImage?.imgUrl}`}
