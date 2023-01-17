@@ -11,7 +11,7 @@ import Profile from "./pages/Profile";
 import EditProfile from "./pages/EditProfile";
 import Comments from "./pages/Comments";
 import Search from "./pages/Search";
-import Messages from "./pages/Messages";
+import AllChats from "./pages/AllChats";
 import Chat from "./pages/Chat";
 import ErrorPage from "./pages/ErrorPage";
 import { Provider } from "react-redux";
@@ -81,7 +81,7 @@ const router = createBrowserRouter([
       {
         path:"/messages",
         element:(<CheckUser>
-          <Messages/>
+          <AllChats/>
         </CheckUser>)
       },
       {
