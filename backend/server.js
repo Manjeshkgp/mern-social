@@ -13,6 +13,7 @@ import http from "http";
 import { Server } from "socket.io";
 import HomePageSocket from "./sockets/HomePageSocket.js";
 import ProfilePageSocket from "./sockets/ProfilePageSocket.js";
+import ChatPageSocket from "./sockets/ChatPageSocket.js";
 import chatRoute from "./routes/chatRoute.js"
 import messageRoute from "./routes/messageRoute.js"
 
@@ -37,6 +38,7 @@ io.on("connection", (socket) => {
     }
     // else the socket will automatically try to reconnect
   });
+  ChatPageSocket(socket);
   HomePageSocket(socket);
   ProfilePageSocket(socket);
 });

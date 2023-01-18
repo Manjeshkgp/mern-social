@@ -77,7 +77,7 @@ const router = createBrowserRouter([
         element:(<CheckUser>
           <Profile socket={socket}/>
         </CheckUser>) // add & delete comment✅, this isn't good (so ditch it) at small data: show home posts properly according to friends list
-      }, // messages page. all these functions should be added //⭐⭐Profile page desing having so many errors
+      }, // messages page✅, Now connect socket to make it faster. all these functions should be added //⭐⭐Profile page desing having so many errors
       {
         path:"/messages",
         element:(<CheckUser>
