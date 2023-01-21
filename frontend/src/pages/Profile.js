@@ -123,7 +123,7 @@ const Profile = ({ socket }) => {
                   ? { height: `${height + 8.875}rem`, minHeight: "15rem" }
                   : { height: `${height + 9.875}rem` }
               }
-              className={`bg-red-200 mt-12 grid overflow-hidden md:w-[80vw] xl:w-[935px]`}
+              className={`text-white border-b border-gray-600 mt-12 grid overflow-hidden md:w-[80vw] xl:w-[935px]`}
             >
               <div
                 style={
@@ -171,7 +171,7 @@ const Profile = ({ socket }) => {
               </div>
               <div className="h-8 md:flex md:justify-start items-center md:h-12 md:absolute md:font-semibold md:text-lg md:mt-4 md:max-w-[613px]">
                 <div
-                  className="flex justify-evenly fixed bg-green-200 py-[0.75rem] w-[100vw] top-0 z-10 border-b border-black md:border-none md:block md:py-0 md:z-0 md:w-auto md:static md:items-center md:flex-row md:justify-start md:max-w-[613px] md:ml-[28.8vw] lg:ml-[19rem] xl:ml-[19.5rem]"
+                  className="flex justify-evenly fixed py-[0.75rem] w-[100vw] top-0 z-10 border-b border-black md:border-none md:block md:py-0 md:z-0 md:w-auto md:static md:items-center md:flex-row md:justify-start md:max-w-[613px] md:ml-[28.8vw] lg:ml-[19rem] xl:ml-[19.5rem]"
                   // className="flex justify-evenly bg-green-200 py-[0.75rem] w-[100vw] z-10 border-b border-black absolute top-0" try this for mobile devices
                 >
                   <Link to="/" className="md:hidden">

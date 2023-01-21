@@ -87,7 +87,7 @@ const router = createBrowserRouter([
       {
         path:"/messages/:anotherUserId",
         element:(<CheckUser>
-          <Chat/>
+          <Chat socket={socket}/>
         </CheckUser>)
       }
     ],

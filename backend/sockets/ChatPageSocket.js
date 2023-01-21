@@ -1,10 +1,12 @@
-const ChatPageSocket = (socket)=>{
-    socket.on("create-chat-room",({chatId,messagesArray})=>{
-        socket.join(`${chatId}`);
-        socket.on("send-message",({chatId,senderId,text})=>{
-            messagesArray.push({chatId,senderId,text})
-            socket.in(`${chatId}`).emit("updated-messages",messagesArray)
-        })
-    })
-}
+const ChatPageSocket = (socket) => {
+  socket.on("join room", ({ chatId }) => {
+    console.log(chatId);
+    socket.join(chatId);
+  });
+  socket.on("send-message", (message) => {
+    console.log(message);
+    console.log(socket.rooms)
+    socket.broadcast.in(message.chatId).emit("updated-messages", [message]);
+  });
+};
 export default ChatPageSocket;
